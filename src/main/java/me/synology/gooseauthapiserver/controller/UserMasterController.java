@@ -20,19 +20,20 @@ import java.util.List;
 @RequestMapping(value = "/v1")
 public class UserMasterController {
 
-    private final UserMasterService userMasterService;
+  private final UserMasterService userMasterService;
 
-    @Operation(summary = "회원 조회", description = "모든 회원을 조회한다.")
-    @GetMapping(value = "/users")
-    public List<UserMaster> findAllUsers() {
-        return userMasterService.findAllUsers();
-    }
+  @Operation(summary = "회원 조회", description = "모든 회원을 조회한다.")
+  @GetMapping(value = "/users")
+  public List<UserMaster> findAllUsers() {
+    return userMasterService.findAllUsers();
+  }
 
-    @Operation(summary = "회원 입력", description = "회원을 입력한다.")
-    @PostMapping(value = "/users")
-    public UserMaster saveUsers(@Parameter(name = "회원 이메일", required = true) @RequestParam String userEmail,
-                                @Parameter(name = "회원 패스워드", required = true) @RequestParam String userPassword,
-                                @Parameter(name = "회원 닉네임", required = true) @RequestParam String userNickname) {
-        return userMasterService.saveUser(userEmail, userPassword, userNickname);
-    }
+  @Operation(summary = "회원 입력", description = "회원을 입력한다.")
+  @PostMapping(value = "/users")
+  public UserMaster saveUsers(
+      @Parameter(name = "회원 이메일", required = true) @RequestParam String userEmail,
+      @Parameter(name = "회원 패스워드", required = true) @RequestParam String userPassword,
+      @Parameter(name = "회원 닉네임", required = true) @RequestParam String userNickname) {
+    return userMasterService.saveUser(userEmail, userPassword, userNickname);
+  }
 }

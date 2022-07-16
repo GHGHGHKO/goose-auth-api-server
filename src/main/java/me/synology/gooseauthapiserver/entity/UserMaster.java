@@ -22,28 +22,28 @@ import java.time.LocalDateTime;
 @Table(name = "user_master")
 public class UserMaster {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userIdentity;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long userIdentity;
 
-    @Column(nullable = false, unique = true, length = 40)
-    private String userEmail;
+  @Column(nullable = false, unique = true, length = 40)
+  private String userEmail;
 
-    @Column(nullable = false, length = 100)
-    private String userPassword;
+  @Column(nullable = false, length = 100)
+  private String userPassword;
 
-    @Column(nullable = false, length = 100)
-    private String userNickname;
+  @Column(nullable = false, length = 100)
+  private String userNickname;
 
-    @Column(nullable = false, length = 100)
-    private String createUser;
+  @Column(nullable = false, length = 100)
+  private String createUser;
 
-    @Column(nullable = false)
-    private LocalDateTime createDate;
+  @Column(nullable = false)
+  private LocalDateTime createDate;
 
-    @Column(nullable = false, length = 100)
-    private String updateUser;
+  @Column(nullable = false, length = 100)
+  private String updateUser;
 
-    @Column(nullable = false)
-    private LocalDateTime updateDate;
+  @Column(nullable = false)
+  private LocalDateTime updateDate;
 }
