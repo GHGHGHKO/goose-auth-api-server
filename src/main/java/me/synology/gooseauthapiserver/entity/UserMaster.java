@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import java.time.LocalDateTime;
 
 @Builder
 @Entity
@@ -33,4 +34,16 @@ public class UserMaster {
 
     @Column(nullable = false, length = 100)
     private String userNickname;
+
+    @Column(nullable = false, length = 100)
+    private String createUser;
+
+    @Column(nullable = false)
+    private LocalDateTime createDate;
+
+    @Column(nullable = false, length = 100)
+    private String updateUser;
+
+    @Column(nullable = false)
+    private LocalDateTime updateDate;
 }
