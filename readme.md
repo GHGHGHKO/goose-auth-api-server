@@ -2,6 +2,9 @@
 
 ### 로컬 빌드 방법
 
+1. postgres, redis container 실행
+2. configuration 설정
+
 Run/Debug Configurations
 
 Override configuration properties
