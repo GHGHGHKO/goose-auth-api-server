@@ -24,7 +24,8 @@ public class UserMaster {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long userIdentity;
+  @Column(nullable = false)
+  private Long userIdentity;
 
   @Column(nullable = false, unique = true, length = 40)
   private String userEmail;
@@ -46,4 +47,5 @@ public class UserMaster {
 
   @Column(nullable = false)
   private LocalDateTime updateDate;
+
 }
