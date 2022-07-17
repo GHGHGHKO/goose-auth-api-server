@@ -2,8 +2,10 @@ package me.synology.gooseauthapiserver.model.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class CommonResult {
 
   @Schema(name = "응답 성공여부 : true/false")
@@ -13,5 +15,5 @@ public class CommonResult {
   private int code;
 
   @Schema(name = "응답 메시지")
-  private String msg;
+  private String message;
 }
