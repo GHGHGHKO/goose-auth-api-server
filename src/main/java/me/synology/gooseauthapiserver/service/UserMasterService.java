@@ -1,6 +1,8 @@
 package me.synology.gooseauthapiserver.service;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import me.synology.gooseauthapiserver.advice.UserNotFoundExceptionCustom;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,11 @@ public class UserMasterService {
 
   public List<UserMaster> findAllUsers() {
     return userMasterRepository.findAll();
+  }
+
+  public UserMaster findUserByIdentity(Long userIdentity) {
+    return userMasterRepository.findById(userIdentity)
+        .orElseThrow(UserNotFoundExceptionCustom::new);
   }
 
   public UserMaster saveUser(String userEmail, String userPassword, String userNickname) {
