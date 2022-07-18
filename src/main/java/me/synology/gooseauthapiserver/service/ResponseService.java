@@ -29,21 +29,17 @@ public class ResponseService {
     commonResult.setMessage(CommonResponse.SUCCESS.getMessage());
   }
 
-  private void setFailResult(CommonResult commonResult) {
-    commonResult.setSuccess(false);
-    commonResult.setCode(CommonResponse.FAIL.getCode());
-    commonResult.setMessage(CommonResponse.FAIL.getMessage());
-  }
-
   public CommonResult getSuccessResult() {
     CommonResult commonResult = new CommonResult();
     setSuccessResult(commonResult);
     return commonResult;
   }
 
-  public CommonResult getFailResult() {
+  public CommonResult getFailResult(int code, String message) {
     CommonResult commonResult = new CommonResult();
-    setFailResult(commonResult);
+    commonResult.setSuccess(false);
+    commonResult.setCode(code);
+    commonResult.setMessage(message);
     return commonResult;
   }
 
