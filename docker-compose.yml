@@ -12,16 +12,16 @@ services:
     depends_on:
       - postgres
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gooseauth
-      - SPRING_DATASOURCE_USERNAME=gooseauth
-      - SPRING_DATASOURCE_PASSWORD=gooseauth
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+      - spring_datasource_url=jdbc:postgresql://postgres:5432/gooseauth
+      - spring_datasource_username=gooseauth
+      - spring_datasource_password=gooseauth
+      - spring_jpa_hibernate_ddl-auto=create
 
   postgres:
     image: postgres:13
     container_name: goose-auth-api-postgres
     ports:
-      - 5432:5432
+      - 5431:5432
     environment:
       POSTGRES_USER: gooseauth
       POSTGRES_PASSWORD: gooseauth
