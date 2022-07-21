@@ -38,6 +38,16 @@ public class ExceptionAdvice {
     );
   }
 
+  @ExceptionHandler(EmailSignInFailedExceptionCustom.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  protected CommonResult emailSignInFailed(HttpServletRequest request,
+      EmailSignInFailedExceptionCustom exceptionCustom) {
+    return responseService.getFailResult(
+        Integer.parseInt(getMessage("emailSignInFailed.code")),
+        getMessage("emailSignInFailed.message")
+    );
+  }
+
   private String getMessage(String code) {
     return getMessage(code, null);
   }

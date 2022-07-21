@@ -24,7 +24,7 @@ public class SecurityConfiguration {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/*/signin", "/*/signup").permitAll()
+        .antMatchers("/*/signIn", "/*/signUp").permitAll()
         .antMatchers(HttpMethod.GET, "/helloWorld/**").permitAll()
         .anyRequest().hasRole("USER")
         .and()
@@ -36,7 +36,7 @@ public class SecurityConfiguration {
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    return (web) -> web.ignoring()
+    return web -> web.ignoring()
         .antMatchers("/v3/api-docs/**",
             "/swagger-resources/**",
             "/swagger-ui/**",
