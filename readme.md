@@ -11,7 +11,7 @@ Override configuration properties
 
 | Name | Value                                      |
 |------|--------------------------------------------|
-| spring.datasource.url | jdbc:postgresql://localhost:5432/gooseauth |
+| spring.datasource.url | jdbc:postgresql://localhost:5431/gooseauth |
 | spring.datasource.username | gooseauth                                  |
 | spring.datasource.password | gooseauth                                  |
 | spring.jpa.hibernate.ddl-auto | update                                  |
