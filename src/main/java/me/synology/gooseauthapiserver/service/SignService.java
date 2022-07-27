@@ -1,5 +1,6 @@
 package me.synology.gooseauthapiserver.service;
 
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.configuration.security.JwtTokenProvider;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SignInService {
+public class SignService {
 
   private final UserMasterRepository userMasterRepository;
 
@@ -18,16 +19,27 @@ public class SignInService {
 
   private final JwtTokenProvider jwtTokenProvider;
 
-  public String signIn(String userEmail, String password) {
+  public String signIn(String userEmail, String userPassword) {
     UserMaster userMaster = userMasterRepository.findByUserEmail(userEmail).orElseThrow(
         EmailSignInFailedExceptionCustom::new);
 
-    if (!passwordEncoder.matches(password, userMaster.getPassword())) {
+    if (!passwordEncoder.matches(userPassword, userMaster.getPassword())) {
       throw new EmailSignInFailedExceptionCustom();
     }
 
     return jwtTokenProvider.createToken(String.valueOf(userMaster.getUserIdentity()),
         userMaster.getRoles());
+  }
+
+  public void signUp(String userEmail, String userPassword, String userNickname) {
+    userMasterRepository.save(
+        UserMaster.builder()
+            .userEmail(userEmail)
+            .userPassword(passwordEncoder.encode(userPassword))
+            .userNickname(userNickname)
+            .roles(Collections.singletonList("ROLE_USER"))
+            .build()
+    );
   }
 
 }
