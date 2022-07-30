@@ -4,16 +4,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import me.synology.gooseauthapiserver.dto.sign.SignUpRequest;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
 import me.synology.gooseauthapiserver.model.response.SingleResult;
 import me.synology.gooseauthapiserver.service.ResponseService;
 import me.synology.gooseauthapiserver.service.SignService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "1. Sign")
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/v1")
@@ -33,11 +37,11 @@ public class SignController {
 
   @Operation(summary = "회원가입", description = "회원가입을 한다.")
   @PostMapping(value = "/signUp")
-  public CommonResult signUp(
-      @Parameter(name = "회원ID : 이메일", required = true) @RequestParam String userEmail,
-      @Parameter(name = "비밀번호", required = true) @RequestParam String userPassword,
-      @Parameter(name = "이름", required = true) @RequestParam String userNickname) {
-    signService.signUp(userEmail, userPassword, userNickname);
+  public CommonResult signUp(@RequestBody SignUpRequest signUpRequest) {
+    log.info("{} {} {}", signUpRequest.getUserEmail(), signUpRequest.getUserPassword(),
+        signUpRequest.getUserNickname());
+    signService.signUp(signUpRequest.getUserEmail(), signUpRequest.getUserPassword(),
+        signUpRequest.getUserNickname());
     return responseService.getSuccessResult();
   }
 }
