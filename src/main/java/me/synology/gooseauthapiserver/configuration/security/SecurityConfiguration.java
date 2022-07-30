@@ -25,8 +25,10 @@ public class SecurityConfiguration {
         .and()
         .authorizeRequests()
         .antMatchers("/*/signIn", "/*/signUp").permitAll()
-        .antMatchers(HttpMethod.GET, "/helloWorld/**").permitAll()
+        .antMatchers(HttpMethod.GET, "/exception/**", "/helloWorld/**").permitAll()
         .anyRequest().hasRole("USER")
+        .and()
+        .exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPointCustom())
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
