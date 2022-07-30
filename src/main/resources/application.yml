@@ -21,3 +21,4 @@ spring:
 info:
   api:
     id: 500
+    url: https://goose-auth.synology.me

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -16,6 +17,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Configuration
 @EnableWebMvc
 public class SwaggerConfiguration {
+
+  @Value("${info.api.url}")
+  private String apiUrl;
 
   @Bean
   public GroupedOpenApi publicApi() {
@@ -28,7 +32,7 @@ public class SwaggerConfiguration {
   @Bean
   public OpenAPI springGooseAuthAPI() {
     return new OpenAPI()
-        .addServersItem(new Server().url("https://goose-auth.synology.me"))
+        .addServersItem(new Server().url(apiUrl))
         .components(new Components().addSecuritySchemes("basicScheme",
             new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
         .info(new Info().title("goose-auth-api Swagger")
