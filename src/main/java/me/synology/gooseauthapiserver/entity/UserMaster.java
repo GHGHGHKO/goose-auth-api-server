@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,6 +61,11 @@ public class UserMaster implements UserDetails {
   private LocalDateTime updateDate;
 
   @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+      name="user_master_roles",
+      joinColumns = @JoinColumn(name = "user_master_id")
+  )
+  @Column(name = "roles")
   @Builder.Default
   private List<String> roles = new ArrayList<>();
 
