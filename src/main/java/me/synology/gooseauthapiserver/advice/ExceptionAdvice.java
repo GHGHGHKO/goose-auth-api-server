@@ -48,6 +48,15 @@ public class ExceptionAdvice {
     );
   }
 
+  @ExceptionHandler(AuthenticationEntryPointExceptionCustom.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  protected CommonResult authenticationEntryPointException(HttpServletRequest request,
+      AuthenticationEntryPointExceptionCustom exceptionCustom) {
+    return responseService.getFailResult(Integer.parseInt(getMessage("entryPointException.code")),
+        getMessage("entryPointException.message")
+    );
+  }
+
   private String getMessage(String code) {
     return getMessage(code, null);
   }
