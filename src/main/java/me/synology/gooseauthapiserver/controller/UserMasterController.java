@@ -9,6 +9,7 @@ import me.synology.gooseauthapiserver.model.response.ListResult;
 import me.synology.gooseauthapiserver.model.response.SingleResult;
 import me.synology.gooseauthapiserver.service.ResponseService;
 import me.synology.gooseauthapiserver.service.UserMasterService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,24 +29,27 @@ public class UserMasterController {
 
   @Operation(summary = "모든 회원 조회", description = "모든 회원을 조회한다.")
   @GetMapping(value = "/users")
-  public ListResult<UserMaster> findAllUsers() {
-    return responseService.getListResult(userMasterService.findAllUsers());
+  public ResponseEntity<ListResult<UserMaster>> findAllUsers() {
+    return ResponseEntity.ok()
+        .body(responseService.getListResult(userMasterService.findAllUsers()));
   }
 
   @Operation(summary = "회원 조회", description = "회원을 조회한다.")
   @GetMapping(value = "/users/{userIdentity}")
-  public SingleResult<UserMaster> findUserByUserIdentity(
+  public ResponseEntity<SingleResult<UserMaster>> findUserByUserIdentity(
       @Parameter(name = "회원의 userIdentity", required = true)
       @PathVariable Long userIdentity) {
-    return responseService.getSingleResult(userMasterService.findUserByIdentity(userIdentity));
+    return ResponseEntity.ok()
+        .body(responseService.getSingleResult(userMasterService.findUserByIdentity(userIdentity)));
   }
 
   @Operation(summary = "회원 입력", description = "회원을 입력한다.")
   @PostMapping(value = "/users")
-  public UserMaster saveUsers(
+  public ResponseEntity<UserMaster> saveUsers(
       @Parameter(name = "회원 이메일", required = true) @RequestParam String userEmail,
       @Parameter(name = "회원 패스워드", required = true) @RequestParam String userPassword,
       @Parameter(name = "회원 닉네임", required = true) @RequestParam String userNickname) {
-    return userMasterService.saveUser(userEmail, userPassword, userNickname);
+    return ResponseEntity.ok()
+        .body(userMasterService.saveUser(userEmail, userPassword, userNickname));
   }
 }
