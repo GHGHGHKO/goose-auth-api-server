@@ -7,54 +7,62 @@ import me.synology.gooseauthapiserver.service.ResponseService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
-public class ExceptionAdvice {
+public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
   private final ResponseService responseService;
 
   private final MessageSource messageSource;
 
   @ExceptionHandler(Exception.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  protected CommonResult defaultException(HttpServletRequest request,
-      Exception e) {
-    return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")),
-        getMessage("unKnown.message")
-    );
+  @ResponseBody
+  protected ResponseEntity<CommonResult> defaultException(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")),
+            getMessage("unKnown.message")
+        ));
   }
 
   @ExceptionHandler(UserNotFoundExceptionCustom.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  protected CommonResult userNotFoundException(HttpServletRequest request,
-      UserNotFoundExceptionCustom exceptionCustom) {
-    return responseService.getFailResult(
-        Integer.parseInt(getMessage("userNotFound.code")),
-        getMessage("userNotFound.message")
-    );
+  @ResponseBody
+  protected ResponseEntity<CommonResult> userNotFoundException(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(responseService.getFailResult(
+            Integer.parseInt(getMessage("userNotFound.code")),
+            getMessage("userNotFound.message")
+        ));
   }
 
   @ExceptionHandler(EmailSignInFailedExceptionCustom.class)
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  protected CommonResult emailSignInFailed(HttpServletRequest request,
-      EmailSignInFailedExceptionCustom exceptionCustom) {
-    return responseService.getFailResult(
-        Integer.parseInt(getMessage("emailSignInFailed.code")),
-        getMessage("emailSignInFailed.message")
-    );
+  @ResponseBody
+  protected ResponseEntity<CommonResult> emailSignInFailed(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(responseService.getFailResult(
+            Integer.parseInt(getMessage("emailSignInFailed.code")),
+            getMessage("emailSignInFailed.message")
+        ));
   }
 
-  @ExceptionHandler(AuthenticationEntryPointExceptionCustom.class)
-  @ResponseStatus(HttpStatus.FORBIDDEN)
-  protected CommonResult authenticationEntryPointException(HttpServletRequest request,
-      AuthenticationEntryPointExceptionCustom exceptionCustom) {
-    return responseService.getFailResult(Integer.parseInt(getMessage("entryPointException.code")),
-        getMessage("entryPointException.message")
-    );
+  @ExceptionHandler(AuthenticationException.class)
+  @ResponseBody
+  public ResponseEntity<CommonResult> authenticationEntryPointException(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(
+            responseService.getFailResult(Integer.parseInt(getMessage("entryPointException.code")),
+                getMessage("entryPointException.message")
+            ));
   }
 
   private String getMessage(String code) {

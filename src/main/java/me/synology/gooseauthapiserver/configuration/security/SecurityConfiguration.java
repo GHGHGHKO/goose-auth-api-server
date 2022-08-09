@@ -1,12 +1,14 @@
 package me.synology.gooseauthapiserver.configuration.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -15,6 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
   private final JwtTokenProvider jwtTokenProvider;
+
+  @Qualifier("authenticationEntryPointCustom")
+  private final AuthenticationEntryPoint authEntryPoint;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,7 +33,7 @@ public class SecurityConfiguration {
         .antMatchers(HttpMethod.GET, "/exception/**", "/helloWorld/**").permitAll()
         .anyRequest().hasRole("USER")
         .and()
-        .exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPointCustom())
+        .exceptionHandling().authenticationEntryPoint(authEntryPoint)
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
