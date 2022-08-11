@@ -27,6 +27,9 @@ public class SecurityConfiguration {
   @Qualifier("authenticationEntryPointCustom")
   private final AuthenticationEntryPoint authEntryPoint;
 
+  @Qualifier("accessDeniedHandlerCustom")
+  private final AccessDeniedHandlerCustom accessDeniedHandlerCustom;
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
@@ -38,9 +41,11 @@ public class SecurityConfiguration {
         .authorizeRequests()
         .antMatchers("/*/signIn", "/*/signUp").permitAll()
         .antMatchers(HttpMethod.GET, "/exception/**", "/helloWorld/**").permitAll()
+        .antMatchers("/*/users").hasRole("ADMIN")
         .anyRequest().hasRole("USER")
         .and()
         .exceptionHandling().authenticationEntryPoint(authEntryPoint)
+        .accessDeniedHandler(accessDeniedHandlerCustom)
         .and()
         .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
             UsernamePasswordAuthenticationFilter.class);
@@ -52,7 +57,8 @@ public class SecurityConfiguration {
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of("*"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"));
+    configuration.setAllowedMethods(
+        Arrays.asList("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"));
     configuration.setAllowedHeaders(List.of("*"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);

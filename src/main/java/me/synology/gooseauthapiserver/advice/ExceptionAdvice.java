@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -56,12 +57,24 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(AuthenticationException.class)
   @ResponseBody
-  public ResponseEntity<CommonResult> authenticationEntryPointException(HttpServletRequest request) {
+  public ResponseEntity<CommonResult> authenticationEntryPointException(
+      HttpServletRequest request) {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(
             responseService.getFailResult(Integer.parseInt(getMessage("entryPointException.code")),
                 getMessage("entryPointException.message")
+            ));
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseBody
+  public ResponseEntity<CommonResult> accessDeniedException() {
+    return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body(
+            responseService.getFailResult(Integer.parseInt(getMessage("accessDenied.code")),
+                getMessage("accessDenied.message")
             ));
   }
 
