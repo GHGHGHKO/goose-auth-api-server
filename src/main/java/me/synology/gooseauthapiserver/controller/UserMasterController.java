@@ -12,9 +12,7 @@ import me.synology.gooseauthapiserver.service.UserMasterService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "2. UserMaster")
@@ -41,15 +39,5 @@ public class UserMasterController {
       @PathVariable Long userIdentity) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(userMasterService.findUserByIdentity(userIdentity)));
-  }
-
-  @Operation(summary = "회원 입력", description = "회원을 입력한다.")
-  @PostMapping(value = "/users")
-  public ResponseEntity<UserMaster> saveUsers(
-      @Parameter(name = "회원 이메일", required = true) @RequestParam String userEmail,
-      @Parameter(name = "회원 패스워드", required = true) @RequestParam String userPassword,
-      @Parameter(name = "회원 닉네임", required = true) @RequestParam String userNickname) {
-    return ResponseEntity.ok()
-        .body(userMasterService.saveUser(userEmail, userPassword, userNickname));
   }
 }
