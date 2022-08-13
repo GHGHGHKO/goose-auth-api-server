@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,13 +79,33 @@ class SignControllerTest {
     params.put("userPassword", "HONKHONK!");
 
     mockMvc.perform(post("/v1/signIn")
-        .content(objectMapper.writeValueAsString(params))
-        .contentType(MediaType.APPLICATION_JSON))
+            .content(objectMapper.writeValueAsString(params))
+            .contentType(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.success").value(true))
         .andExpect(jsonPath("$.code").value(0))
         .andExpect(jsonPath("$.message").exists())
         .andExpect(jsonPath("$.data").exists());
+  }
+
+  @Test
+  void signUp() throws Exception {
+    String signUpTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+    Map<String, String> params = new HashMap<>();
+
+    params.put("userEmail", "goose" + signUpTime + "@gmail.com");
+    params.put("userPassword", "HONKHONK!");
+    params.put("userNickname", "I-AM-NOT-DUCK");
+
+    mockMvc.perform(post("/v1/signUp")
+            .content(objectMapper.writeValueAsString(params))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.success").value(true))
+        .andExpect(jsonPath("$.code").value(0))
+        .andExpect(jsonPath("$.message").exists());
   }
 }
