@@ -37,3 +37,13 @@ info:
   api:
     id: 500
     url: https://goose-auth.synology.me
+
+social:
+  kakao:
+    kauth:
+      url: https://kauth.kakao.com
+    kapi:
+      url: https://kapi.kakao.com
+
+    redirect: /social/login/kakao
+    clientId: vault

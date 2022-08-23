@@ -55,6 +55,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         ));
   }
 
+  @ExceptionHandler(CommunicationExceptionCustom.class)
+  @ResponseBody
+  protected ResponseEntity<CommonResult> communicationException(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(responseService.getFailResult(
+            Integer.parseInt(getMessage("communicationError.code")),
+            getMessage("communicationError.message")
+        ));
+  }
+
   @ExceptionHandler(AuthenticationException.class)
   @ResponseBody
   public ResponseEntity<CommonResult> authenticationEntryPointException(
