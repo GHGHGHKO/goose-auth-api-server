@@ -39,7 +39,7 @@ public class SecurityConfiguration {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .authorizeRequests()
-        .antMatchers("/*/signIn", "/*/signUp").permitAll()
+        .antMatchers("/*/signIn", "/*/signUp", "/v1/social/**").permitAll()
         .antMatchers(HttpMethod.GET, "/exception/**", "/helloWorld/**").permitAll()
         .antMatchers("/*/users").hasRole("ADMIN")
         .anyRequest().hasRole("USER")
