@@ -26,6 +26,19 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+    - name: Setup PostgreSQL
+  # You may pin to the exact commit or the version.
+  # uses: Harmon758/postgresql-action@0be19fa37850b22cb4c9bbf28a03abbf44abd863
+      uses: Harmon758/postgresql-action@v1.0.0
+      with:
+        # Version of PostgreSQL to use
+        postgresql version: latest
+        # POSTGRES_DB - name for the default database that is created
+        postgresql db: gooseauth
+        # POSTGRES_USER - create the specified user with superuser power
+        postgresql user: gooseauth
+        # POSTGRES_PASSWORD - superuser password
+        postgresql password: gooseauth
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
