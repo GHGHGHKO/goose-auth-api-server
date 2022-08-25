@@ -41,10 +41,11 @@ jobs:
         
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      env:
+        spring_datasource_url: ${{ secrets.DATASOURCE_URL }}
+        spring_datasource_username: ${{ secrets.POSTGRES_USER }}
+        spring_datasource_password: ${{ secrets.POSTGRES_PASSWORD }}
+        spring_jpa_hibernate_ddl-auto: ${{ secrets.DDL_AUTH }}
       with:
-        spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
-        spring.datasource.username: ${{ secrets.POSTGRES_USER }}
-        spring.datasource.password: ${{ secrets.POSTGRES_PASSWORD }}
-        spring.jpa.hibernate.ddl-auto: ${{ secrets.DDL_AUTH }}
         arguments: build
       
