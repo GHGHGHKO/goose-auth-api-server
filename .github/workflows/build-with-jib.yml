@@ -44,7 +44,7 @@ jobs:
         spring_datasource_url: ${{ secrets.DATASOURCE_URL }}
         spring_datasource_username: ${{ secrets.POSTGRES_USER }}
         spring_datasource_password: ${{ secrets.POSTGRES_PASSWORD }}
-        spring_jpa_hibernate_ddl-auto: ${{ secrets.DDL_AUTO }}
+        spring_jpa_hibernate_ddl-auto: create
       with:
         arguments: build
       
