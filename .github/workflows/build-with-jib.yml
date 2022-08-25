@@ -32,9 +32,9 @@ jobs:
       uses: Harmon758/postgresql-action@v1.0.0
       with:
         postgresql version: latest
-        postgresql db: ${{ secret.POSTGRES_DB }}
-        postgresql user: ${{ secret.POSTGRES_USER }}
-        postgresql password: ${{ secret.POSTGRES_PASSWORD }}
+        postgresql db: ${{ secrets.POSTGRES_DB }}
+        postgresql user: ${{ secrets.POSTGRES_USER }}
+        postgresql password: ${{ secrets.POSTGRES_PASSWORD }}
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -42,10 +42,10 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       env:
-        spring.datasource.url: ${{ secret.DATASOURCE_URL }}
-        spring.datasource.username: ${{ secret.POSTGRES_USER }}
-        spring.datasource.password: ${{ secret.POSTGRES_PASSWORD }}
-        spring.jpa.hibernate.ddl-auto: ${{ secret.DDL_AUTH }}
+        spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
+        spring.datasource.username: ${{ secrets.POSTGRES_USER }}
+        spring.datasource.password: ${{ secrets.POSTGRES_PASSWORD }}
+        spring.jpa.hibernate.ddl-auto: ${{ secrets.DDL_AUTH }}
       with:
         arguments: build
       
