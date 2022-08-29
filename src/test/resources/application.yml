@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    username: vault
-    password: vault
-    url: vault
+    username: gooseauth
+    password: gooseauth
+    url: jdbc:postgresql://localhost:5432/gooseauth
 
   config:
     import: vault://
