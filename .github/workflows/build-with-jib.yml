@@ -52,4 +52,10 @@ jobs:
         spring_jpa_hibernate_ddl-auto: create
       with:
         arguments: build -x test
+        
+    - name: Jib with Gradle
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: jib
+        
       
