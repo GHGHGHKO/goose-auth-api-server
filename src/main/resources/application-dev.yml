@@ -1,0 +1,39 @@
+logging:
+  level:
+    root: warn
+    me:
+      synology:
+        gooseauthapiserver: info
+  file:
+    path: /volumes/api/logs
+
+  logback:
+    rollingpolicy:
+      max-history: 7
+
+spring:
+  datasource:
+    username: vault
+    password: vault
+    url: vault
+
+  config:
+    import: vault://
+
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      token: insert-your-TOKEN
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auth: vault
+        default_batch_fetch_size: 1000
+        format_sql: true
+
+info:
+  api:
+    id: 500
+    url: https://goose-auth.synology.me
