@@ -41,7 +41,7 @@ public class SecurityConfiguration {
         .authorizeRequests()
         .antMatchers("/*/signIn", "/*/signUp", "/v1/social/**").permitAll()
         .antMatchers(HttpMethod.GET, "/exception/**", "/helloWorld/**").permitAll()
-        .antMatchers("/*/users").hasRole("ADMIN")
+        .antMatchers("/*/users/**").hasRole("ADMIN")
         .anyRequest().hasRole("USER")
         .and()
         .exceptionHandling().authenticationEntryPoint(authEntryPoint)
