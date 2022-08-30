@@ -16,6 +16,8 @@ services:
       - spring_cloud_vault_uri=http://vault:8200
       - spring_cloud_vault_token=insert-your-TOKEN
       - spring_profiles_active=dev
+    volumes:
+      - ./volumes/api/logs:/volumes/api/logs
 
   postgres:
     image: postgres:13
