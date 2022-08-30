@@ -1,6 +1,6 @@
 # goose-auth-api-server
 
-### 로컬 빌드 방법
+## 로컬 빌드 방법
 
 1. postgres, redis container 실행
 2. configuration 설정
@@ -16,7 +16,8 @@ Override configuration properties
 | spring.datasource.password | gooseauth                                  |
 | spring.jpa.hibernate.ddl-auto | update                                  |
  
-혹은
+**혹은**
+
 ## vault 설정하기
 ```yml
   cloud:
@@ -24,7 +25,7 @@ Override configuration properties
       uri: http://localhost:8200
       token: insert-your-TOKEN
 ```
-## vault 내부
+### vault 내부
 ```json
 {
   "spring.datasource.password": "your-password",
