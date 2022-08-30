@@ -17,5 +17,7 @@ Override configuration properties
 | spring.jpa.hibernate.ddl-auto | update                                  |
  
  
- ### Workflow 추가
+### Workflow 추가
  
+### 활용 기술
+![tech-stack](https://user-images.githubusercontent.com/26823834/187427630-e154f066-4507-4e7d-9844-27a5b31684f7.png)
