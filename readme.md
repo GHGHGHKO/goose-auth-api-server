@@ -16,6 +16,23 @@ Override configuration properties
 | spring.datasource.password | gooseauth                                  |
 | spring.jpa.hibernate.ddl-auto | update                                  |
  
+혹은
+## vault 설정하기
+```yml
+  cloud:
+    vault:
+      uri: http://localhost:8200
+      token: insert-your-TOKEN
+```
+## vault 내부
+```json
+{
+  "spring.datasource.password": "your-password",
+  "spring.datasource.url": "jdbc:postgresql://localhost:5432/your-schema",
+  "spring.datasource.username": "your-password",
+  "spring.jpa.hibernate.ddl-auto": "create"
+}
+```
  
 ### Workflow 추가
  
