@@ -28,10 +28,10 @@ Override configuration properties
 ### vault 내부
 ```json
 {
-  "spring.datasource.password": "your-password",
-  "spring.datasource.url": "jdbc:postgresql://localhost:5432/your-schema",
-  "spring.datasource.username": "your-password",
-  "spring.jpa.hibernate.ddl-auto": "create"
+  "spring.datasource.password": "gooseauth",
+  "spring.datasource.url": "jdbc:postgresql://localhost:5431/gooseauth",
+  "spring.datasource.username": "gooseauth",
+  "spring.jpa.hibernate.ddl-auto": "update"
 }
 ```
  
