@@ -1,5 +1,7 @@
 package me.synology.gooseauthapiserver.controller;
 
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +29,9 @@ public class UserMasterController {
 
   @Operation(summary = "모든 회원 조회", description = "모든 회원을 조회한다.")
   @GetMapping(value = "/users")
-  public ResponseEntity<ListResult<UserMaster>> findAllUsers() {
+  public ResponseEntity<ListResult<UserMaster>> findAllUsers(
+      @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token
+  ) {
     return ResponseEntity.ok()
         .body(responseService.getListResult(userMasterService.findAllUsers()));
   }
@@ -35,7 +39,8 @@ public class UserMasterController {
   @Operation(summary = "회원 조회", description = "회원을 조회한다.")
   @GetMapping(value = "/users/{userIdentity}")
   public ResponseEntity<SingleResult<UserMaster>> findUserByUserIdentity(
-      @Parameter(name = "회원의 userIdentity", required = true)
+      @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "userIdentity", required = true)
       @PathVariable Long userIdentity) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(userMasterService.findUserByIdentity(userIdentity)));
