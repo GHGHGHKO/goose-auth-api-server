@@ -1,6 +1,5 @@
 package me.synology.gooseauthapiserver.service;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.advice.UserNotFoundExceptionCustom;
 import me.synology.gooseauthapiserver.entity.UserMaster;
