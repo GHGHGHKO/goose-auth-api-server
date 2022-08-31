@@ -38,8 +38,7 @@ public class SignController {
   @Operation(summary = "회원가입", description = "회원가입을 한다.")
   @PostMapping(value = "/signUp")
   public ResponseEntity<CommonResult> signUp(@RequestBody SignUpRequest signUpRequest) {
-    log.info("{} {} {}", signUpRequest.getUserEmail(), signUpRequest.getUserPassword(),
-        signUpRequest.getUserNickname());
+    log.info("signUp user email : {}", signUpRequest.getUserEmail());
     signService.signUp(signUpRequest.getUserEmail(), signUpRequest.getUserPassword(),
         signUpRequest.getUserNickname());
     return ResponseEntity.ok()

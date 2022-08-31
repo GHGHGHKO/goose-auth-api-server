@@ -66,6 +66,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         ));
   }
 
+  @ExceptionHandler(UserExistExceptionCustom.class)
+  @ResponseBody
+  protected ResponseEntity<CommonResult> userExistException(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body(responseService.getFailResult(
+            Integer.parseInt(getMessage("existingUser.code")),
+            getMessage("existingUser.message")
+        ));
+  }
+
   @ExceptionHandler(AuthenticationException.class)
   @ResponseBody
   public ResponseEntity<CommonResult> authenticationEntryPointException(

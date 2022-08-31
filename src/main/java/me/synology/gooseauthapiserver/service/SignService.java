@@ -2,8 +2,10 @@ package me.synology.gooseauthapiserver.service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
+import me.synology.gooseauthapiserver.advice.UserExistExceptionCustom;
 import me.synology.gooseauthapiserver.configuration.security.JwtTokenProvider;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
@@ -37,6 +39,12 @@ public class SignService {
   }
 
   public void signUp(String userEmail, String userPassword, String userNickname) {
+    Optional<UserMaster> userMaster = userMasterRepository.findByUserEmail(userEmail);
+
+    if (userMaster.isPresent()) {
+      throw new UserExistExceptionCustom();
+    }
+
     userMasterRepository.save(
         UserMaster.builder()
             .userEmail(userEmail)
