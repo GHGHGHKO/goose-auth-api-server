@@ -35,7 +35,7 @@ spring:
 
 info:
   api:
-    id: 500
+    id: API-SERVER
     url: https://goose-auth.synology.me
 
 social:

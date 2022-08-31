@@ -29,5 +29,5 @@ spring:
 
 info:
   api:
-    id: 500
+    id: API-SERVER
     url: http://localhost:8080
