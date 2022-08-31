@@ -1,4 +1,4 @@
-package me.synology.gooseauthapiserver.dto.sign;
+package me.synology.gooseauthapiserver.dto.sign.gooseauth;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
