@@ -15,6 +15,7 @@ import me.synology.gooseauthapiserver.model.response.SingleResult;
 import me.synology.gooseauthapiserver.service.ResponseService;
 import me.synology.gooseauthapiserver.service.gooseauth.GooseAuthSignService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,7 @@ public class GooseAuthSignController {
   @PostMapping(value = "/signUp")
   public ResponseEntity<CommonResult> gooseAuthSignUp(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
-      @RequestBody GooseAuthSignUpRequestDto gooseAuthSignUpRequestDto) {
+      @Validated @RequestBody GooseAuthSignUpRequestDto gooseAuthSignUpRequestDto) {
     gooseAuthSignService.gooseAuthSignUp(gooseAuthSignUpRequestDto);
     return ResponseEntity.ok()
         .body(responseService.getSuccessResult());
@@ -45,7 +46,7 @@ public class GooseAuthSignController {
   @PostMapping(value = "/signIn")
   public ResponseEntity<SingleResult<GooseAuthSignInResponseDto>> gooseAuthSignIn(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
-      @RequestBody GooseAuthSignInRequestDto gooseAuthSignInRequestDto) {
+      @Validated @RequestBody GooseAuthSignInRequestDto gooseAuthSignInRequestDto) {
     log.info("gooseAuthSignIn user email : {}", gooseAuthSignInRequestDto.getUserEmail());
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
