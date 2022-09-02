@@ -11,6 +11,7 @@ import me.synology.gooseauthapiserver.model.response.SingleResult;
 import me.synology.gooseauthapiserver.service.ResponseService;
 import me.synology.gooseauthapiserver.service.SignService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public class SignController {
 
   @Operation(summary = "로그인", description = "이메일 회원 로그인을 한다.")
   @PostMapping(value = "/signIn")
-  public ResponseEntity<SingleResult<String>> signIn(@RequestBody SignInRequest signInRequest) {
+  public ResponseEntity<SingleResult<String>> signIn(@Validated @RequestBody SignInRequest signInRequest) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
             signService.signIn(signInRequest.getUserEmail(), signInRequest.getUserPassword())));
@@ -37,7 +38,7 @@ public class SignController {
 
   @Operation(summary = "회원가입", description = "회원가입을 한다.")
   @PostMapping(value = "/signUp")
-  public ResponseEntity<CommonResult> signUp(@RequestBody SignUpRequest signUpRequest) {
+  public ResponseEntity<CommonResult> signUp(@Validated @RequestBody SignUpRequest signUpRequest) {
     log.info("signUp user email : {}", signUpRequest.getUserEmail());
     signService.signUp(signUpRequest.getUserEmail(), signUpRequest.getUserPassword(),
         signUpRequest.getUserNickname());

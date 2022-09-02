@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
 import me.synology.gooseauthapiserver.model.response.ListResult;
 import me.synology.gooseauthapiserver.model.response.SingleResult;
+import me.synology.gooseauthapiserver.model.response.ValidationCheckResult;
+import me.synology.gooseauthapiserver.model.response.ValidationCheckResult.FieldErrors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,12 @@ public class ResponseService {
     commonResult.setMessage(CommonResponse.SUCCESS.getMessage());
   }
 
+  private void setFailResult(CommonResult commonResult, int code, String message) {
+    commonResult.setSuccess(false);
+    commonResult.setCode(code);
+    commonResult.setMessage(message);
+  }
+
   public CommonResult getSuccessResult() {
     CommonResult commonResult = new CommonResult();
     setSuccessResult(commonResult);
@@ -41,6 +49,13 @@ public class ResponseService {
     commonResult.setCode(code);
     commonResult.setMessage(message);
     return commonResult;
+  }
+
+  public ValidationCheckResult getFailResults(int code, String message, List<FieldErrors> allErrors) {
+    ValidationCheckResult validationCheckResult = new ValidationCheckResult();
+    validationCheckResult.setArgumentsNotValid(allErrors);
+    setFailResult(validationCheckResult, code, message);
+    return validationCheckResult;
   }
 
   public <T> SingleResult<T> getSingleResult(T data) {
