@@ -1,21 +1,31 @@
 package me.synology.gooseauthapiserver.advice;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
+import me.synology.gooseauthapiserver.model.response.ValidationCheckResult.FieldErrors;
 import me.synology.gooseauthapiserver.service.ResponseService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RequiredArgsConstructor
+@Slf4j
 @RestControllerAdvice
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
@@ -74,6 +84,31 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         .body(responseService.getFailResult(
             Integer.parseInt(getMessage("existingUser.code")),
             getMessage("existingUser.message")
+        ));
+  }
+
+  @NotNull
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException methodArgumentNotValidException, @NotNull HttpHeaders headers,
+      @NotNull HttpStatus status, @NotNull WebRequest request) {
+
+    List<FieldErrors> fieldErrorsList = new ArrayList<>();
+
+    for (FieldError error : methodArgumentNotValidException.getBindingResult().getFieldErrors()) {
+      FieldErrors fieldErrors = new FieldErrors();
+      fieldErrors.setField(error.getField());
+      fieldErrors.setValue((String) error.getRejectedValue());
+      fieldErrors.setReason(error.getDefaultMessage());
+      fieldErrorsList.add(fieldErrors);
+    }
+
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(responseService.getFailResults(
+            Integer.parseInt(getMessage("argumentNotValid.code")),
+            getMessage("argumentNotValid.message"),
+            fieldErrorsList
         ));
   }
 
