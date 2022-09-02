@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
 import me.synology.gooseauthapiserver.dto.sign.gooseauth.GooseAuthSignInRequestDto;
 import me.synology.gooseauthapiserver.dto.sign.gooseauth.GooseAuthSignInResponseDto;
 import me.synology.gooseauthapiserver.dto.sign.gooseauth.GooseAuthSignUpRequestDto;
@@ -36,6 +37,7 @@ public class GooseAuthSignController {
   @PostMapping(value = "/signUp")
   public ResponseEntity<CommonResult> gooseAuthSignUp(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
       @Validated @RequestBody GooseAuthSignUpRequestDto gooseAuthSignUpRequestDto) {
     gooseAuthSignService.gooseAuthSignUp(gooseAuthSignUpRequestDto);
     return ResponseEntity.ok()
@@ -46,6 +48,7 @@ public class GooseAuthSignController {
   @PostMapping(value = "/signIn")
   public ResponseEntity<SingleResult<GooseAuthSignInResponseDto>> gooseAuthSignIn(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
       @Validated @RequestBody GooseAuthSignInRequestDto gooseAuthSignInRequestDto) {
     log.info("gooseAuthSignIn user email : {}", gooseAuthSignInRequestDto.getUserEmail());
     return ResponseEntity.ok()
