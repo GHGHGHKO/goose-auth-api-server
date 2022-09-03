@@ -10,4 +10,6 @@ public class GooseAuthSignInResponseDto {
   private String userEmail;
 
   private String passwordHint;
+
+  private String token;
 }
