@@ -1,11 +1,18 @@
 package me.synology.gooseauthapiserver.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,25 +24,29 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "goose_auth_user_master")
-public class GooseAuthUserMaster {
+@Table(name = "add_items")
+public class AddedItems {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
-  private Long userIdentity;
+  private Long itemIdentity;
 
-  @Column(nullable = false, unique = true, length = 40)
-  private String userEmail;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_identity")
+  private UserMaster userMaster;
 
-  @Column(nullable = false, length = 100)
+  @Column(nullable = false)
+  private String name;
+
+  private String userName;
+
   private String userPassword;
 
-  @Column(nullable = false, length = 100)
-  private String userNickname;
+  private String folder;
 
-  @Column(length = 200)
-  private String passwordHint;
+  @Column(length = 1000)
+  private String notes;
 
   @Column(nullable = false, length = 100)
   private String createUser;
@@ -48,4 +59,12 @@ public class GooseAuthUserMaster {
 
   @Column(nullable = false)
   private LocalDateTime updateDate;
+
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+      name = "add_items_uri",
+      joinColumns = @JoinColumn(name = "add_items_id")
+  )
+  @Column(name = "uri")
+  private List<String> uri = new ArrayList<>();
 }
