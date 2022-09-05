@@ -66,5 +66,6 @@ public class GooseAuthItems {
       joinColumns = @JoinColumn(name = "goose_auth_items_id")
   )
   @Column(name = "uri")
+  @Builder.Default
   private List<String> uri = new ArrayList<>();
 }
