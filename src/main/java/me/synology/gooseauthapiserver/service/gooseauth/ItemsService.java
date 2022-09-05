@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.dto.sign.gooseauth.AddItemRequestDto;
-import me.synology.gooseauthapiserver.entity.AddedItems;
+import me.synology.gooseauthapiserver.entity.GooseAuthItems;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import me.synology.gooseauthapiserver.repository.AddedItemsRepository;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AddItemService {
+public class ItemsService {
 
   private final AddedItemsRepository addedItemsRepository;
 
@@ -28,7 +28,7 @@ public class AddItemService {
         addItemRequestDto.getUserEmail()).orElseThrow(EmailSignInFailedExceptionCustom::new);
 
     addedItemsRepository.save(
-        AddedItems.builder()
+        GooseAuthItems.builder()
             .userMaster(userIdentify)
             .name(addItemRequestDto.getName())
             .userName(addItemRequestDto.getUserName())

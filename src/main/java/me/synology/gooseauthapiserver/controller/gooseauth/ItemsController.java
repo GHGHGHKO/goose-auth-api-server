@@ -11,7 +11,7 @@ import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
 import me.synology.gooseauthapiserver.dto.sign.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
 import me.synology.gooseauthapiserver.service.ResponseService;
-import me.synology.gooseauthapiserver.service.gooseauth.AddItemService;
+import me.synology.gooseauthapiserver.service.gooseauth.ItemsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/v1/gooseAuth")
-public class AddItemController {
+public class ItemsController {
 
-  private final AddItemService addItemService;
+  private final ItemsService itemsService;
 
   private final ResponseService responseService;
 
@@ -36,7 +36,7 @@ public class AddItemController {
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
       @Validated @RequestBody AddItemRequestDto addItemRequestDto) {
-    addItemService.gooseAuthAddItem(addItemRequestDto);
+    itemsService.gooseAuthAddItem(addItemRequestDto);
     return ResponseEntity.ok()
         .body(responseService.getSuccessResult());
   }

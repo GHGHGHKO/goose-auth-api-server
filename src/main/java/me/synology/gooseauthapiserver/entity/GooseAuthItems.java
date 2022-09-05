@@ -24,8 +24,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "add_items")
-public class AddedItems {
+@Table(name = "goose_auth_items")
+public class GooseAuthItems {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,8 +62,8 @@ public class AddedItems {
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
-      name = "add_items_uri",
-      joinColumns = @JoinColumn(name = "add_items_id")
+      name = "goose_auth_items_uri",
+      joinColumns = @JoinColumn(name = "goose_auth_items_id")
   )
   @Column(name = "uri")
   private List<String> uri = new ArrayList<>();
