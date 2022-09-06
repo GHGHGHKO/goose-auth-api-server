@@ -8,6 +8,7 @@ import me.synology.gooseauthapiserver.entity.GooseAuthItems;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import me.synology.gooseauthapiserver.repository.AddedItemsRepository;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
+import me.synology.gooseauthapiserver.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,8 @@ public class ItemsService {
   public void gooseAuthAddItem(AddItemRequestDto addItemRequestDto) {
 
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
-        addItemRequestDto.getUserEmail()).orElseThrow(EmailSignInFailedExceptionCustom::new);
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
 
     addedItemsRepository.save(
         GooseAuthItems.builder()
