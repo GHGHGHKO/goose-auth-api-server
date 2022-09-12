@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import me.synology.gooseauthapiserver.entity.UserMaster;
+import me.synology.gooseauthapiserver.dto.sign.UserMasterResponseDto;
 import me.synology.gooseauthapiserver.model.response.ListResult;
 import me.synology.gooseauthapiserver.model.response.SingleResult;
 import me.synology.gooseauthapiserver.service.ResponseService;
@@ -29,7 +29,7 @@ public class UserMasterController {
 
   @Operation(summary = "모든 회원 조회", description = "모든 회원을 조회한다.")
   @GetMapping(value = "/users")
-  public ResponseEntity<ListResult<UserMaster>> findAllUsers(
+  public ResponseEntity<ListResult<UserMasterResponseDto>> findAllUsers(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token
   ) {
     return ResponseEntity.ok()
@@ -38,7 +38,7 @@ public class UserMasterController {
 
   @Operation(summary = "회원 조회", description = "회원을 조회한다.")
   @GetMapping(value = "/users/{userIdentity}")
-  public ResponseEntity<SingleResult<UserMaster>> findUserByUserIdentity(
+  public ResponseEntity<SingleResult<UserMasterResponseDto>> findUserByUserIdentity(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "userIdentity", required = true)
       @PathVariable Long userIdentity) {
