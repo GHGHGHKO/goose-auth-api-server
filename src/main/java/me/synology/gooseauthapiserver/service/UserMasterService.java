@@ -1,7 +1,9 @@
 package me.synology.gooseauthapiserver.service;
 
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.advice.UserNotFoundExceptionCustom;
+import me.synology.gooseauthapiserver.dto.sign.UserMasterResponseDto;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +21,24 @@ public class UserMasterService {
   @Value("${info.api.id}")
   private String apiUser;
 
-  public List<UserMaster> findAllUsers() {
-    return userMasterRepository.findAll();
+  public List<UserMasterResponseDto> findAllUsers() {
+    List<UserMaster> userMasterList = userMasterRepository.findAll();
+
+    return userMasterList.stream()
+        .map(userMaster -> new UserMasterResponseDto(
+            userMaster.getUserEmail(), userMaster.getUserNickname(),
+            userMaster.getRoles(), userMaster.getUpdateDate()
+        ))
+        .collect(Collectors.toList());
   }
 
-  public UserMaster findUserByIdentity(Long userIdentity) {
-    return userMasterRepository.findById(userIdentity)
+  public UserMasterResponseDto findUserByIdentity(Long userIdentity) {
+    UserMaster userMaster = userMasterRepository.findById(userIdentity)
         .orElseThrow(UserNotFoundExceptionCustom::new);
+
+    return new UserMasterResponseDto(
+        userMaster.getUserEmail(), userMaster.getUserNickname(),
+        userMaster.getRoles(), userMaster.getUpdateDate());
   }
 
   public UserMaster saveUser(String userEmail, String userPassword, String userNickname) {
