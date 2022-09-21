@@ -11,6 +11,11 @@ spring:
     password: vault
     url: vault
 
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 3000
+
   config:
     import: vault://
 

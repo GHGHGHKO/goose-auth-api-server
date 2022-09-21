@@ -12,10 +12,12 @@ services:
     depends_on:
       - postgres
       - vault
+      - redis
     environment:
       - spring_cloud_vault_uri=http://vault:8200
       - spring_cloud_vault_token=insert-your-TOKEN
       - spring_profiles_active=dev
+      - spring_redis_host=redis
     volumes:
       - ./volumes/api/logs:/volumes/api/logs
 

@@ -35,7 +35,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   @ResponseBody
-  protected ResponseEntity<CommonResult> defaultException(HttpServletRequest request) {
+  protected ResponseEntity<CommonResult> defaultException(HttpServletRequest request, Exception e) {
+    log.error("Exception endPoint: {} {}, queryString : {}", request.getMethod(),
+        request.getRequestURI(), request.getQueryString(), e);
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")),
