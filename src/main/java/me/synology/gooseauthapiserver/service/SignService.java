@@ -1,6 +1,5 @@
 package me.synology.gooseauthapiserver.service;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +50,7 @@ public class SignService {
             .userPassword(passwordEncoder.encode(userPassword))
             .userNickname(userNickname)
             .createUser(apiUser)
-            .createDate(LocalDateTime.now())
             .updateUser(apiUser)
-            .updateDate(LocalDateTime.now())
             .roles(Collections.singletonList("ROLE_USER"))
             .build()
     );

@@ -21,7 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
-import java.time.LocalDateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "user_master")
-public class UserMaster implements UserDetails {
+public class UserMaster extends BaseEntity implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,14 +50,8 @@ public class UserMaster implements UserDetails {
   @Column(nullable = false, length = 100)
   private String createUser;
 
-  @Column(nullable = false)
-  private LocalDateTime createDate;
-
   @Column(nullable = false, length = 100)
   private String updateUser;
-
-  @Column(nullable = false)
-  private LocalDateTime updateDate;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(

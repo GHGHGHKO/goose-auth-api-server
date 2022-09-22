@@ -9,7 +9,6 @@ import me.synology.gooseauthapiserver.repository.UserMasterRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,19 +38,5 @@ public class UserMasterService {
     return new UserMasterResponseDto(
         userMaster.getUserEmail(), userMaster.getUserNickname(),
         userMaster.getRoles(), userMaster.getUpdateDate());
-  }
-
-  public UserMaster saveUser(String userEmail, String userPassword, String userNickname) {
-    UserMaster userMaster = UserMaster.builder()
-        .userEmail(userEmail)
-        .userPassword(userPassword)
-        .userNickname(userNickname)
-        .createUser(apiUser)
-        .createDate(LocalDateTime.now())
-        .updateUser(apiUser)
-        .updateDate(LocalDateTime.now())
-        .build();
-
-    return userMasterRepository.save(userMaster);
   }
 }

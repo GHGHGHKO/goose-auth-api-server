@@ -1,6 +1,5 @@
 package me.synology.gooseauthapiserver.service.gooseauth;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -62,9 +61,7 @@ public class ItemsService {
             .notes(addItemRequestDto.getNotes())
             .uri(addItemRequestDto.getUri())
             .createUser(apiUser)
-            .createDate(LocalDateTime.now())
             .updateUser(apiUser)
-            .updateDate(LocalDateTime.now())
             .build()
     );
   }

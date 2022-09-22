@@ -1,6 +1,5 @@
 package me.synology.gooseauthapiserver.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CollectionTable;
@@ -25,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "goose_auth_items")
-public class GooseAuthItems {
+public class GooseAuthItems extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,14 +50,8 @@ public class GooseAuthItems {
   @Column(nullable = false, length = 100)
   private String createUser;
 
-  @Column(nullable = false)
-  private LocalDateTime createDate;
-
   @Column(nullable = false, length = 100)
   private String updateUser;
-
-  @Column(nullable = false)
-  private LocalDateTime updateDate;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
