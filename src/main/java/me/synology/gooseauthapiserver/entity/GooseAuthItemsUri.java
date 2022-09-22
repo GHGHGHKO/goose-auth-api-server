@@ -19,29 +19,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "goose_auth_items")
-public class GooseAuthItems extends BaseEntity {
+@Table(name = "goose_auth_items_uri")
+public class GooseAuthItemsUri extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
-  private Long itemIdentity;
+  private Long uriIdentity;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_identity")
-  private UserMaster userMaster;
+  @JoinColumn(name = "goose_auth_items_item_identity")
+  private GooseAuthItems gooseAuthItems;
 
-  @Column(nullable = false)
-  private String name;
-
-  private String userName;
-
-  private String userPassword;
-
-  private String folder;
-
-  @Column(length = 1000)
-  private String notes;
+  @Column(nullable = false, length = 350)
+  private String uri;
 
   @Column(nullable = false, length = 100)
   private String createUser;

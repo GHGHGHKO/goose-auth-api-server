@@ -7,12 +7,15 @@ import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.sign.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.entity.GooseAuthItems;
+import me.synology.gooseauthapiserver.entity.GooseAuthItemsUri;
 import me.synology.gooseauthapiserver.entity.UserMaster;
+import me.synology.gooseauthapiserver.repository.GooseAuthItemsUriRepository;
 import me.synology.gooseauthapiserver.repository.ItemsRepository;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
 import me.synology.gooseauthapiserver.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,36 +25,33 @@ public class ItemsService {
 
   private final UserMasterRepository userMasterRepository;
 
+  private final GooseAuthItemsUriRepository gooseAuthItemsUriRepository;
+
   @Value("${info.api.id}")
   private String apiUser;
 
-  public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems(String folder) {
+  public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems() {
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
             CommonUtils.getAuthenticationUserEmail())
         .orElseThrow(EmailSignInFailedExceptionCustom::new);
-    List<GooseAuthItems> gooseAuthItemsList;
 
-    if (folder == null) {
-      gooseAuthItemsList = itemsRepository.findAllByUserMaster(userIdentify);
-    } else {
-      gooseAuthItemsList = itemsRepository.findAllByUserMasterAndFolder(userIdentify, folder);
-    }
+    List<GooseAuthItems> gooseAuthItemsList = itemsRepository.findAllByUserMaster(userIdentify);
 
     return gooseAuthItemsList.stream()
-        .map(gooseAuthItems -> new GooseAuthGetItemsResponseDto(gooseAuthItems.getName(),
-            gooseAuthItems.getUserName(),
-            gooseAuthItems.getUserPassword(), gooseAuthItems.getUri(), gooseAuthItems.getFolder(),
-            gooseAuthItems.getNotes(), gooseAuthItems.getUpdateDate()))
+        .map(gooseAuthItems -> new GooseAuthGetItemsResponseDto(gooseAuthItems.getItemIdentity(),
+            gooseAuthItems.getName(),
+            gooseAuthItems.getUserName(), gooseAuthItems.getFolder()))
         .collect(Collectors.toList());
   }
 
+  @Transactional
   public void gooseAuthAddItem(AddItemRequestDto addItemRequestDto) {
 
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
             CommonUtils.getAuthenticationUserEmail())
         .orElseThrow(EmailSignInFailedExceptionCustom::new);
 
-    itemsRepository.save(
+    GooseAuthItems gooseAuthItems = itemsRepository.save(
         GooseAuthItems.builder()
             .userMaster(userIdentify)
             .name(addItemRequestDto.getName())
@@ -59,10 +59,18 @@ public class ItemsService {
             .userPassword(addItemRequestDto.getUserPassword())
             .folder(addItemRequestDto.getFolder())
             .notes(addItemRequestDto.getNotes())
-            .uri(addItemRequestDto.getUri())
             .createUser(apiUser)
             .updateUser(apiUser)
             .build()
     );
+
+    addItemRequestDto.getUri().forEach(uri -> gooseAuthItemsUriRepository.save(
+        GooseAuthItemsUri.builder()
+            .gooseAuthItems(gooseAuthItems)
+            .uri(uri)
+            .createUser(apiUser)
+            .updateUser(apiUser)
+            .build()
+    ));
   }
 }

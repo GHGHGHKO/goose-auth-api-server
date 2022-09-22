@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "4. GooseAuth Add Item")
@@ -45,13 +44,12 @@ public class ItemsController {
         .body(responseService.getSuccessResult());
   }
 
-  @Operation(summary = "GooseAuth get items", description = "접속 정보를 가져온다.")
+  @Operation(summary = "GooseAuth get items", description = "모든 접속 정보를 가져온다.")
   @GetMapping(value = "/items")
   public ResponseEntity<ListResult<GooseAuthGetItemsResponseDto>> gooseAuthItems(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
-      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @RequestParam(required = false) String folder) {
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language) {
     return ResponseEntity.ok()
-        .body(responseService.getListResult(itemsService.gooseAuthGetItems(folder)));
+        .body(responseService.getListResult(itemsService.gooseAuthGetItems()));
   }
 }
