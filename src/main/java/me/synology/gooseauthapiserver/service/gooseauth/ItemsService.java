@@ -39,8 +39,7 @@ public class ItemsService {
 
     return gooseAuthItemsList.stream()
         .map(gooseAuthItems -> new GooseAuthGetItemsResponseDto(gooseAuthItems.getItemIdentity(),
-            gooseAuthItems.getName(),
-            gooseAuthItems.getUserName(), gooseAuthItems.getFolder()))
+            gooseAuthItems.getName(), gooseAuthItems.getUserName()))
         .collect(Collectors.toList());
   }
 
