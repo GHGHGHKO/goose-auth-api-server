@@ -14,6 +14,4 @@ public class GooseAuthGetItemsResponseDto {
   private String name;
 
   private String userName;
-
-  private String folder;
 }
