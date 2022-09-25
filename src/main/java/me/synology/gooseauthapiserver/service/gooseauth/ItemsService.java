@@ -30,12 +30,17 @@ public class ItemsService {
   @Value("${info.api.id}")
   private String apiUser;
 
-  public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems() {
+  public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems(String folder) {
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
             CommonUtils.getAuthenticationUserEmail())
         .orElseThrow(EmailSignInFailedExceptionCustom::new);
+    List<GooseAuthItems> gooseAuthItemsList;
 
-    List<GooseAuthItems> gooseAuthItemsList = itemsRepository.findAllByUserMaster(userIdentify);
+    if (folder == null) {
+      gooseAuthItemsList = itemsRepository.findAllByUserMaster(userIdentify);
+    } else {
+      gooseAuthItemsList = itemsRepository.findAllByUserMasterAndFolder(userIdentify, folder);
+    }
 
     return gooseAuthItemsList.stream()
         .map(gooseAuthItems -> new GooseAuthGetItemsResponseDto(gooseAuthItems.getItemIdentity(),
