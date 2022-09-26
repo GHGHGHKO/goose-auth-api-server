@@ -1,9 +1,13 @@
 package me.synology.gooseauthapiserver.service.gooseauth;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
+import me.synology.gooseauthapiserver.advice.ItemNotExistException;
+import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.entity.GooseAuthItems;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ItemsService {
@@ -29,6 +34,27 @@ public class ItemsService {
 
   @Value("${info.api.id}")
   private String apiUser;
+
+  @Transactional
+  public GooseAuthGetItemResponseDto gooseAuthGetItem(Long itemIdentity) {
+    UserMaster userIdentify = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userIdentify,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
+
+    List<String> uris = new ArrayList<>();
+    gooseAuthItemsUriList.forEach(uri -> uris.add(uri.getUri()));
+
+    return new GooseAuthGetItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
+        gooseAuthItems.getUserPassword(), uris, gooseAuthItems.getFolder(),
+        gooseAuthItems.getNotes());
+  }
 
   public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems(String folder) {
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
