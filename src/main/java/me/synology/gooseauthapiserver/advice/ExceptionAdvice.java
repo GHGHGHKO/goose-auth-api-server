@@ -89,6 +89,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         ));
   }
 
+  @ExceptionHandler(ItemNotExistException.class)
+  @ResponseBody
+  protected ResponseEntity<CommonResult> itemExistException(HttpServletRequest request) {
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(responseService.getFailResult(
+            Integer.parseInt(getMessage("itemNotExist.code")),
+            getMessage("itemNotExist.message")
+        ));
+  }
+
   @NotNull
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
