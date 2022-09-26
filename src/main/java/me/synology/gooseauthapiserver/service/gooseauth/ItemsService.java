@@ -52,10 +52,9 @@ public class ItemsService {
     gooseAuthItemsUriList.forEach(uri -> uris.add(uri.getUri()));
 
     return new GooseAuthGetItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
-        gooseAuthItems.getUserPassword(), uris, gooseAuthItems.getFolder(),
-        gooseAuthItems.getNotes());
+        gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(), gooseAuthItems.getFolder(),
+        uris);
   }
-
   public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems(String folder) {
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
             CommonUtils.getAuthenticationUserEmail())
