@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
-import me.synology.gooseauthapiserver.dto.sign.gooseauth.AddItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
 import me.synology.gooseauthapiserver.model.response.ListResult;
 import me.synology.gooseauthapiserver.service.ResponseService;

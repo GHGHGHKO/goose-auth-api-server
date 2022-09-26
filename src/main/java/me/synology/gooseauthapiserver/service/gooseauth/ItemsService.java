@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
-import me.synology.gooseauthapiserver.dto.sign.gooseauth.AddItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.entity.GooseAuthItems;
 import me.synology.gooseauthapiserver.entity.GooseAuthItemsUri;
 import me.synology.gooseauthapiserver.entity.UserMaster;
