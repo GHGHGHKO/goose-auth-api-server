@@ -16,9 +16,9 @@ public class GooseAuthGetItemResponseDto {
 
   private String userPassword;
 
-  private List<String> uri;
-
   private String folder;
 
   private String notes;
+
+  private List<String> uri;
 }
