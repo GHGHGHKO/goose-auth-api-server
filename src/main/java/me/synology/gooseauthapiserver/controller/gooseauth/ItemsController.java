@@ -11,6 +11,8 @@ import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemResponseDto;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
 import me.synology.gooseauthapiserver.model.response.ListResult;
 import me.synology.gooseauthapiserver.model.response.SingleResult;
@@ -21,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,5 +69,17 @@ public class ItemsController {
       @PathVariable(required = false) Long itemIdentity) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(itemsService.gooseAuthGetItem(itemIdentity)));
+  }
+
+  @Operation(summary = "GooseAuth update item", description = "id로 접속 정보를 업데이트 한다.")
+  @PutMapping(value = "/items/{itemIdentity}")
+  public ResponseEntity<SingleResult<UpdateItemResponseDto>> gooseAuthUpdateItme(
+      @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
+      @PathVariable(required = false) Long itemIdentity,
+      @Validated @RequestBody UpdateItemRequestDto updateItemRequestDto) {
+    return ResponseEntity.ok()
+        .body(responseService.getSingleResult(
+            itemsService.gooseAuthUpdateItem(itemIdentity, updateItemRequestDto)));
   }
 }

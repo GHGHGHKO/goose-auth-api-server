@@ -39,4 +39,8 @@ public class GooseAuthItemsUri extends BaseEntity {
 
   @Column(nullable = false, length = 100)
   private String updateUser;
+
+  public void updateItemUri(String uri) {
+    this.uri = uri;
+  }
 }

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
 
 @Builder
 @Entity
@@ -48,4 +49,12 @@ public class GooseAuthItems extends BaseEntity {
 
   @Column(nullable = false, length = 100)
   private String updateUser;
+
+  public void updateItem(UpdateItemRequestDto updateItemRequestDto) {
+    this.name = updateItemRequestDto.getName();
+    this.userName = updateItemRequestDto.getUserName();
+    this.userPassword = updateItemRequestDto.getUserPassword();
+    this.folder = updateItemRequestDto.getFolder();
+    this.notes = updateItemRequestDto.getNotes();
+  }
 }

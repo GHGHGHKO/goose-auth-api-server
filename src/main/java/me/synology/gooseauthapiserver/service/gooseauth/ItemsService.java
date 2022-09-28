@@ -10,6 +10,8 @@ import me.synology.gooseauthapiserver.advice.ItemNotExistException;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemResponseDto;
 import me.synology.gooseauthapiserver.entity.GooseAuthItems;
 import me.synology.gooseauthapiserver.entity.GooseAuthItemsUri;
 import me.synology.gooseauthapiserver.entity.UserMaster;
@@ -34,6 +36,34 @@ public class ItemsService {
 
   @Value("${info.api.id}")
   private String apiUser;
+
+  public UpdateItemResponseDto gooseAuthUpdateItem(Long itemIdentity,
+      UpdateItemRequestDto updateItemRequestDto) {
+    UserMaster userIdentify = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userIdentify,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
+
+    gooseAuthItems.updateItem(updateItemRequestDto);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
+
+    List<String> uris = new ArrayList<>();
+    for (int index = 0; index < gooseAuthItemsUriList.size(); index++) {
+      uris.add(updateItemRequestDto.getUri().get(index));
+      gooseAuthItemsUriList.get(index).updateItemUri(updateItemRequestDto.getUri().get(index));
+      gooseAuthItemsUriRepository.save(gooseAuthItemsUriList.get(index));
+    }
+    itemsRepository.save(gooseAuthItems);
+
+    return new UpdateItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
+        gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(), gooseAuthItems.getFolder(),
+        uris);
+  }
 
   @Transactional
   public GooseAuthGetItemResponseDto gooseAuthGetItem(Long itemIdentity) {
