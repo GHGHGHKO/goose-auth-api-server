@@ -20,6 +20,7 @@ import me.synology.gooseauthapiserver.service.ResponseService;
 import me.synology.gooseauthapiserver.service.gooseauth.ItemsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,7 +74,7 @@ public class ItemsController {
 
   @Operation(summary = "GooseAuth update item", description = "id로 접속 정보를 업데이트 한다.")
   @PutMapping(value = "/items/{itemIdentity}")
-  public ResponseEntity<SingleResult<UpdateItemResponseDto>> gooseAuthUpdateItme(
+  public ResponseEntity<SingleResult<UpdateItemResponseDto>> gooseAuthUpdateItem(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
       @PathVariable(required = false) Long itemIdentity,
@@ -81,5 +82,16 @@ public class ItemsController {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
             itemsService.gooseAuthUpdateItem(itemIdentity, updateItemRequestDto)));
+  }
+
+  @Operation(summary = "GooseAuth delete item", description = "id로 접속 정보를 삭제한다.")
+  @DeleteMapping(value = "/items/{itemIdentity}")
+  public ResponseEntity<CommonResult> gooseAuthDeleteItem(
+      @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
+      @PathVariable(required = false) Long itemIdentity) {
+    itemsService.gooseAuthDeleteItem(itemIdentity);
+    return ResponseEntity.ok()
+        .body(responseService.getSuccessResult());
   }
 }
