@@ -37,6 +37,22 @@ public class ItemsService {
   @Value("${info.api.id}")
   private String apiUser;
 
+  public void gooseAuthDeleteItem(Long itemIdentity) {
+    UserMaster userIdentify = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userIdentify,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
+
+    gooseAuthItemsUriRepository.deleteAll(gooseAuthItemsUriList);
+    itemsRepository.delete(gooseAuthItems);
+  }
+
   public UpdateItemResponseDto gooseAuthUpdateItem(Long itemIdentity,
       UpdateItemRequestDto updateItemRequestDto) {
     UserMaster userIdentify = userMasterRepository.findByUserEmail(
