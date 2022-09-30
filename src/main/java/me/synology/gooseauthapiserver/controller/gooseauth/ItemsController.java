@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
+import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
@@ -93,5 +95,17 @@ public class ItemsController {
     itemsService.gooseAuthDeleteItem(itemIdentity);
     return ResponseEntity.ok()
         .body(responseService.getSuccessResult());
+  }
+
+  @Operation(summary = "GooseAuth add item uris", description = "접속 정보의 uri를 추가한다.")
+  @PostMapping(value = "/items/{itemIdentity}")
+  public ResponseEntity<SingleResult<GooseAuthAddUriResponseDto>> gooseAuthAddItemUris(
+      @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
+      @PathVariable(required = false) Long itemIdentity,
+      @Validated @RequestBody GooseAuthAddUriRequestDto gooseAuthAddUriRequestDto) {
+    return ResponseEntity.ok()
+        .body(responseService.getSingleResult(
+            itemsService.gooseAuthAddItemUris(itemIdentity, gooseAuthAddUriRequestDto)));
   }
 }
