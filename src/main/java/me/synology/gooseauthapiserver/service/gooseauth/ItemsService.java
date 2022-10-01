@@ -10,6 +10,7 @@ import me.synology.gooseauthapiserver.advice.ItemNotExistException;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto.Uris;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
@@ -94,8 +95,9 @@ public class ItemsService {
   public GooseAuthGetItemResponseDto gooseAuthGetItem(Long itemIdentity) {
     GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
 
-    List<String> uris = new ArrayList<>();
-    getGooseAuthItemsUriList(itemIdentity).forEach(uri -> uris.add(uri.getUri()));
+    List<Uris> uris = new ArrayList<>();
+    getGooseAuthItemsUriList(itemIdentity).forEach(
+        uri -> uris.add(new Uris(uri.getUriIdentity(), uri.getUri())));
 
     return new GooseAuthGetItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
         gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(), gooseAuthItems.getFolder(),
