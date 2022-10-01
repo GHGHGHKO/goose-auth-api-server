@@ -20,7 +20,7 @@ public class GooseAuthGetItemResponseDto {
 
   private String notes;
 
-  private List<Uris> uri;
+  private List<Uris> uris;
 
   @Getter
   @NoArgsConstructor
