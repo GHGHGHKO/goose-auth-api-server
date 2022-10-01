@@ -20,5 +20,15 @@ public class GooseAuthGetItemResponseDto {
 
   private String notes;
 
-  private List<String> uri;
+  private List<Uris> uris;
+
+  @Getter
+  @NoArgsConstructor
+  @AllArgsConstructor
+  public static class Uris {
+
+    private Long uriIdentity;
+
+    private String uri;
+  }
 }
