@@ -10,11 +10,11 @@ import me.synology.gooseauthapiserver.advice.ItemNotExistException;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
-import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto.Uris;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemResponseDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.UrisResponseDto;
 import me.synology.gooseauthapiserver.entity.GooseAuthItems;
 import me.synology.gooseauthapiserver.entity.GooseAuthItemsUri;
 import me.synology.gooseauthapiserver.entity.UserMaster;
@@ -95,9 +95,9 @@ public class ItemsService {
   public GooseAuthGetItemResponseDto gooseAuthGetItem(Long itemIdentity) {
     GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
 
-    List<Uris> uris = new ArrayList<>();
+    List<UrisResponseDto> uris = new ArrayList<>();
     getGooseAuthItemsUriList(itemIdentity).forEach(
-        uri -> uris.add(new Uris(uri.getUriIdentity(), uri.getUri())));
+        uri -> uris.add(new UrisResponseDto(uri.getUriIdentity(), uri.getUri())));
 
     return new GooseAuthGetItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
         gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(), gooseAuthItems.getFolder(),
