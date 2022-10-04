@@ -18,5 +18,5 @@ public class UpdateItemRequestDto {
 
   private String notes;
 
-  private List<String> uri;
+  private List<UrisRequestDto> uris;
 }
