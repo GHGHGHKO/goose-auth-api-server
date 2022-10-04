@@ -78,12 +78,16 @@ public class ItemsService {
 
     List<GooseAuthItemsUri> gooseAuthItemsUriList = getGooseAuthItemsUriList(itemIdentity);
 
-    List<String> uris = new ArrayList<>();
-    for (int index = 0; index < gooseAuthItemsUriList.size(); index++) {
-      uris.add(updateItemRequestDto.getUri().get(index));
-      gooseAuthItemsUriList.get(index).updateItemUri(updateItemRequestDto.getUri().get(index));
-      gooseAuthItemsUriRepository.save(gooseAuthItemsUriList.get(index));
-    }
+    List<UrisResponseDto> uris = new ArrayList<>();
+    updateItemRequestDto.getUris().forEach(uri ->
+        gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> {
+          if (uri.getUriIdentity().equals(gooseAuthItemsUri.getUriIdentity())) {
+            uris.add(new UrisResponseDto(uri.getUriIdentity(),
+                uri.getUri()));
+            gooseAuthItemsUri.updateItemUri(uri.getUri());
+            gooseAuthItemsUriRepository.save(gooseAuthItemsUri);
+          }
+        }));
     itemsRepository.save(gooseAuthItems);
 
     return new UpdateItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),

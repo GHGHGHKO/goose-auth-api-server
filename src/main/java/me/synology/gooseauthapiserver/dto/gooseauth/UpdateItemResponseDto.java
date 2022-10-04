@@ -20,5 +20,5 @@ public class UpdateItemResponseDto {
 
   private String notes;
 
-  private List<String> uri;
+  private List<UrisResponseDto> uris;
 }
