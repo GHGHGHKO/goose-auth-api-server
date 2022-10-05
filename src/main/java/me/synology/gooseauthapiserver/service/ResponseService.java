@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
 import me.synology.gooseauthapiserver.model.response.ListResult;
+import me.synology.gooseauthapiserver.model.response.RequestParamCheckResult;
+import me.synology.gooseauthapiserver.model.response.RequestParamCheckResult.ParameterError;
 import me.synology.gooseauthapiserver.model.response.SingleResult;
 import me.synology.gooseauthapiserver.model.response.ValidationCheckResult;
 import me.synology.gooseauthapiserver.model.response.ValidationCheckResult.FieldErrors;
@@ -56,6 +58,14 @@ public class ResponseService {
     validationCheckResult.setArgumentsNotValid(allErrors);
     setFailResult(validationCheckResult, code, message);
     return validationCheckResult;
+  }
+
+  public RequestParamCheckResult getParameterFailResult(int code, String message,
+      ParameterError parameterError) {
+    RequestParamCheckResult requestParamCheckResult = new RequestParamCheckResult();
+    requestParamCheckResult.setParameterNotValid(parameterError);
+    setFailResult(requestParamCheckResult, code, message);
+    return requestParamCheckResult;
   }
 
   public <T> SingleResult<T> getSingleResult(T data) {

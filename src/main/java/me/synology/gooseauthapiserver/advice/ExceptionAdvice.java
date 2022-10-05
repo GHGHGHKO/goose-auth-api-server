@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.model.response.CommonResult;
+import me.synology.gooseauthapiserver.model.response.RequestParamCheckResult;
+import me.synology.gooseauthapiserver.model.response.RequestParamCheckResult.ParameterError;
 import me.synology.gooseauthapiserver.model.response.ValidationCheckResult.FieldErrors;
 import me.synology.gooseauthapiserver.service.ResponseService;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +20,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -97,6 +100,27 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         .body(responseService.getFailResult(
             Integer.parseInt(getMessage("itemNotExist.code")),
             getMessage("itemNotExist.message")
+        ));
+  }
+
+  @NotNull
+  @Override
+  protected ResponseEntity<Object> handleMissingServletRequestParameter(
+      MissingServletRequestParameterException missingServletRequestParameterException,
+      @NotNull HttpHeaders headers,
+      @NotNull HttpStatus status, @NotNull WebRequest request) {
+
+    ParameterError parameterError = new ParameterError();
+    parameterError.setParameterName(
+        missingServletRequestParameterException.getParameterName());
+    parameterError.setMessage(missingServletRequestParameterException.getMessage());
+
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(responseService.getParameterFailResult(
+            Integer.parseInt(getMessage("parameterNotValid.code")),
+            getMessage("parameterNotValid.message"),
+            parameterError
         ));
   }
 
