@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.advice.ItemNotExistException;
+import me.synology.gooseauthapiserver.dto.gooseauth.DeleteItemUrisResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
@@ -39,6 +40,28 @@ public class ItemsService {
 
   @Value("${info.api.id}")
   private String apiUser;
+
+  @Transactional
+  public DeleteItemUrisResponseDto gooseAuthDeleteItemUris(Long itemIdentity,
+      List<Long> uriIdentity) {
+
+    GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
+
+    uriIdentity.forEach(
+        uri -> gooseAuthItemsUriRepository.deleteByGooseAuthItemsAndUriIdentity(gooseAuthItems,
+            uri));
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = getGooseAuthItemsUriList(itemIdentity);
+
+    List<UrisResponseDto> urisResponseDtoList = new ArrayList<>();
+    gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> urisResponseDtoList.add(
+        new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(),
+            gooseAuthItemsUri.getUri())));
+
+    return new DeleteItemUrisResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
+        gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(), gooseAuthItems.getFolder(),
+        urisResponseDtoList);
+  }
 
   @Transactional
   public GooseAuthAddUriResponseDto gooseAuthAddItemUris(Long itemIdentity,
