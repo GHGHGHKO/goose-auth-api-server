@@ -71,7 +71,7 @@ public class ItemsController {
   public ResponseEntity<SingleResult<GooseAuthGetItemResponseDto>> gooseAuthItem(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @PathVariable(required = false) Long itemIdentity) {
+      @PathVariable Long itemIdentity) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(itemsService.gooseAuthGetItem(itemIdentity)));
   }
@@ -81,7 +81,7 @@ public class ItemsController {
   public ResponseEntity<SingleResult<UpdateItemResponseDto>> gooseAuthUpdateItem(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @PathVariable(required = false) Long itemIdentity,
+      @PathVariable Long itemIdentity,
       @Validated @RequestBody UpdateItemRequestDto updateItemRequestDto) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
@@ -93,7 +93,7 @@ public class ItemsController {
   public ResponseEntity<CommonResult> gooseAuthDeleteItem(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @RequestParam(required = false) Long itemIdentity) {
+      @RequestParam Long itemIdentity) {
     itemsService.gooseAuthDeleteItem(itemIdentity);
     return ResponseEntity.ok()
         .body(responseService.getSuccessResult());
@@ -104,7 +104,7 @@ public class ItemsController {
   public ResponseEntity<SingleResult<GooseAuthAddUriResponseDto>> gooseAuthAddItemUris(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @PathVariable(required = false) Long itemIdentity,
+      @PathVariable Long itemIdentity,
       @Validated @RequestBody GooseAuthAddUriRequestDto gooseAuthAddUriRequestDto) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
@@ -116,8 +116,8 @@ public class ItemsController {
   public ResponseEntity<SingleResult<DeleteItemUrisResponseDto>> gooseAuthDeleteItemUris(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @PathVariable(required = false) Long itemIdentity,
-      @RequestParam(required = false) List<Long> uriIdentity) {
+      @PathVariable Long itemIdentity,
+      @RequestParam List<Long> uriIdentity) {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
             itemsService.gooseAuthDeleteItemUris(itemIdentity, uriIdentity)
