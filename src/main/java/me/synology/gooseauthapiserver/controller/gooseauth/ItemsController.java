@@ -5,9 +5,11 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
+import me.synology.gooseauthapiserver.dto.gooseauth.DeleteItemUrisResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
@@ -87,11 +89,11 @@ public class ItemsController {
   }
 
   @Operation(summary = "GooseAuth delete item", description = "id로 접속 정보를 삭제한다.")
-  @DeleteMapping(value = "/items/{itemIdentity}")
+  @DeleteMapping(value = "/items")
   public ResponseEntity<CommonResult> gooseAuthDeleteItem(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
-      @PathVariable(required = false) Long itemIdentity) {
+      @RequestParam(required = false) Long itemIdentity) {
     itemsService.gooseAuthDeleteItem(itemIdentity);
     return ResponseEntity.ok()
         .body(responseService.getSuccessResult());
@@ -107,5 +109,18 @@ public class ItemsController {
     return ResponseEntity.ok()
         .body(responseService.getSingleResult(
             itemsService.gooseAuthAddItemUris(itemIdentity, gooseAuthAddUriRequestDto)));
+  }
+
+  @Operation(summary = "GooseAuth delete item uris", description = "id로 접속 정보의 uri들을 삭제한다.")
+  @DeleteMapping(value = "/items/{itemIdentity}")
+  public ResponseEntity<SingleResult<DeleteItemUrisResponseDto>> gooseAuthDeleteItemUris(
+      @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
+      @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
+      @PathVariable(required = false) Long itemIdentity,
+      @RequestParam(required = false) List<Long> uriIdentity) {
+    return ResponseEntity.ok()
+        .body(responseService.getSingleResult(
+            itemsService.gooseAuthDeleteItemUris(itemIdentity, uriIdentity)
+        ));
   }
 }
