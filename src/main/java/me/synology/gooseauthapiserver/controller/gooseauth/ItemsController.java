@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.constants.AcceptLanguageEnum;
+import me.synology.gooseauthapiserver.dto.gooseauth.AddItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.DeleteItemUrisResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
@@ -47,13 +48,12 @@ public class ItemsController {
 
   @Operation(summary = "GooseAuth Add Item", description = "접속 정보를 저장한다.")
   @PostMapping(value = "/addItems")
-  public ResponseEntity<CommonResult> gooseAuthAddItem(
+  public ResponseEntity<SingleResult<AddItemResponseDto>> gooseAuthAddItem(
       @Parameter(name = "X-AUTH-TOKEN", required = true, in = HEADER) String token,
       @Parameter(name = "Accept-Language", in = HEADER) AcceptLanguageEnum language,
       @Validated @RequestBody AddItemRequestDto addItemRequestDto) {
-    itemsService.gooseAuthAddItem(addItemRequestDto);
     return ResponseEntity.ok()
-        .body(responseService.getSuccessResult());
+        .body(responseService.getSingleResult(itemsService.gooseAuthAddItem(addItemRequestDto)));
   }
 
   @Operation(summary = "GooseAuth get items", description = "모든 접속 정보 혹은 폴더 안의 정보를 가져온다.")
