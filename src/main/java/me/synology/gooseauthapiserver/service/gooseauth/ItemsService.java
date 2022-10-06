@@ -45,13 +45,20 @@ public class ItemsService {
   public DeleteItemUrisResponseDto gooseAuthDeleteItemUris(Long itemIdentity,
       List<Long> uriIdentity) {
 
-    GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
+    UserMaster userMaster = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userMaster,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
 
     uriIdentity.forEach(
         uri -> gooseAuthItemsUriRepository.deleteByGooseAuthItemsAndUriIdentity(gooseAuthItems,
             uri));
 
-    List<GooseAuthItemsUri> gooseAuthItemsUriList = getGooseAuthItemsUriList(itemIdentity);
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
 
     List<UrisResponseDto> urisResponseDtoList = new ArrayList<>();
     gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> urisResponseDtoList.add(
@@ -66,8 +73,16 @@ public class ItemsService {
   @Transactional
   public GooseAuthAddUriResponseDto gooseAuthAddItemUris(Long itemIdentity,
       GooseAuthAddUriRequestDto gooseAuthAddUriRequestDto) {
-    GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
-    List<GooseAuthItemsUri> gooseAuthItemsUriList = getGooseAuthItemsUriList(itemIdentity);
+    UserMaster userMaster = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userMaster,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
 
     List<String> uris = new ArrayList<>();
     gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> uris.add(gooseAuthItemsUri.getUri()));
@@ -87,19 +102,36 @@ public class ItemsService {
 
   @Transactional
   public void gooseAuthDeleteItem(Long itemIdentity) {
-    GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
-    gooseAuthItemsUriRepository.deleteAll(getGooseAuthItemsUriList(itemIdentity));
+    UserMaster userMaster = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userMaster,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
+
+    gooseAuthItemsUriRepository.deleteAll(gooseAuthItemsUriList);
     itemsRepository.delete(gooseAuthItems);
   }
 
   @Transactional
   public UpdateItemResponseDto gooseAuthUpdateItem(Long itemIdentity,
       UpdateItemRequestDto updateItemRequestDto) {
-    GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
+    UserMaster userMaster = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userMaster,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
 
     gooseAuthItems.updateItem(updateItemRequestDto);
 
-    List<GooseAuthItemsUri> gooseAuthItemsUriList = getGooseAuthItemsUriList(itemIdentity);
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
 
     List<UrisResponseDto> uris = new ArrayList<>();
     updateItemRequestDto.getUris().forEach(uri ->
@@ -120,10 +152,19 @@ public class ItemsService {
 
   @Transactional
   public GooseAuthGetItemResponseDto gooseAuthGetItem(Long itemIdentity) {
-    GooseAuthItems gooseAuthItems = getGooseAuthItems(itemIdentity);
+    UserMaster userMaster = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
+    GooseAuthItems gooseAuthItems = itemsRepository.findAllByUserMasterAndItemIdentity(userMaster,
+        itemIdentity).orElseThrow(
+        ItemNotExistException::new);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
 
     List<UrisResponseDto> uris = new ArrayList<>();
-    getGooseAuthItemsUriList(itemIdentity).forEach(
+    gooseAuthItemsUriList.forEach(
         uri -> uris.add(new UrisResponseDto(uri.getUriIdentity(), uri.getUri())));
 
     return new GooseAuthGetItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
@@ -177,22 +218,5 @@ public class ItemsService {
             .updateUser(apiUser)
             .build()
     ));
-  }
-
-  private UserMaster getUserIdentify() {
-    return userMasterRepository.findByUserEmail(
-            CommonUtils.getAuthenticationUserEmail())
-        .orElseThrow(EmailSignInFailedExceptionCustom::new);
-  }
-
-  private GooseAuthItems getGooseAuthItems(Long itemIdentity) {
-    return itemsRepository.findAllByUserMasterAndItemIdentity(getUserIdentify(),
-        itemIdentity).orElseThrow(
-        ItemNotExistException::new);
-  }
-
-  private List<GooseAuthItemsUri> getGooseAuthItemsUriList(Long itemIdentity) {
-    return gooseAuthItemsUriRepository.findAllByGooseAuthItems(
-        getGooseAuthItems(itemIdentity));
   }
 }
