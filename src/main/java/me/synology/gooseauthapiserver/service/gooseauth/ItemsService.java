@@ -134,7 +134,9 @@ public class ItemsService {
   public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems(String folder) {
     List<GooseAuthItems> gooseAuthItemsList;
 
-    UserMaster userIdentify = getUserIdentify();
+    UserMaster userIdentify = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
 
     if (folder == null) {
       gooseAuthItemsList = itemsRepository.findAllByUserMaster(userIdentify);
@@ -150,9 +152,13 @@ public class ItemsService {
 
   @Transactional
   public void gooseAuthAddItem(AddItemRequestDto addItemRequestDto) {
+    UserMaster userMaster = userMasterRepository.findByUserEmail(
+            CommonUtils.getAuthenticationUserEmail())
+        .orElseThrow(EmailSignInFailedExceptionCustom::new);
+
     GooseAuthItems gooseAuthItems = itemsRepository.save(
         GooseAuthItems.builder()
-            .userMaster(getUserIdentify())
+            .userMaster(userMaster)
             .name(addItemRequestDto.getName())
             .userName(addItemRequestDto.getUserName())
             .userPassword(addItemRequestDto.getUserPassword())
