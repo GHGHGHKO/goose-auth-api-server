@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.advice.ItemNotExistException;
+import me.synology.gooseauthapiserver.dto.gooseauth.AddItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.DeleteItemUrisResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
@@ -192,7 +193,7 @@ public class ItemsService {
   }
 
   @Transactional
-  public void gooseAuthAddItem(AddItemRequestDto addItemRequestDto) {
+  public AddItemResponseDto gooseAuthAddItem(AddItemRequestDto addItemRequestDto) {
     UserMaster userMaster = userMasterRepository.findByUserEmail(
             CommonUtils.getAuthenticationUserEmail())
         .orElseThrow(EmailSignInFailedExceptionCustom::new);
@@ -210,13 +211,21 @@ public class ItemsService {
             .build()
     );
 
-    addItemRequestDto.getUri().forEach(uri -> gooseAuthItemsUriRepository.save(
-        GooseAuthItemsUri.builder()
-            .gooseAuthItems(gooseAuthItems)
-            .uri(uri)
-            .createUser(apiUser)
-            .updateUser(apiUser)
-            .build()
-    ));
+    List<UrisResponseDto> gooseAuthItemsUriList = new ArrayList<>();
+    addItemRequestDto.getUri().forEach(uri -> {
+      GooseAuthItemsUri gooseAuthItemsUri = gooseAuthItemsUriRepository.save(
+          GooseAuthItemsUri.builder()
+              .gooseAuthItems(gooseAuthItems)
+              .uri(uri)
+              .createUser(apiUser)
+              .updateUser(apiUser)
+              .build());
+      gooseAuthItemsUriList.add(
+          new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(), gooseAuthItemsUri.getUri()));
+    });
+
+    return new AddItemResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
+        gooseAuthItems.getUserPassword(), gooseAuthItems.getFolder(), gooseAuthItems.getNotes(),
+        gooseAuthItemsUriList);
   }
 }
