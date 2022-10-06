@@ -85,16 +85,18 @@ public class ItemsService {
     List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
         gooseAuthItems);
 
-    List<String> uris = new ArrayList<>();
-    gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> uris.add(gooseAuthItemsUri.getUri()));
+    List<UrisResponseDto> uris = new ArrayList<>();
+    gooseAuthItemsUriList.forEach(gooseAuthItemsUri ->
+        uris.add(
+            new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(), gooseAuthItemsUri.getUri())));
     gooseAuthAddUriRequestDto.getUri().forEach(uri -> {
-      uris.add(uri);
-      gooseAuthItemsUriRepository.save(GooseAuthItemsUri.builder()
+      GooseAuthItemsUri gooseAuthItemsUri = gooseAuthItemsUriRepository.save(GooseAuthItemsUri.builder()
           .gooseAuthItems(gooseAuthItems)
           .uri(uri)
           .createUser(apiUser)
           .updateUser(apiUser)
           .build());
+      uris.add(new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(), gooseAuthItemsUri.getUri()));
     });
     return new GooseAuthAddUriResponseDto(gooseAuthItems.getName(), gooseAuthItems.getUserName(),
         gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(), gooseAuthItems.getFolder(),
