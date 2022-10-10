@@ -6,7 +6,7 @@ import me.synology.gooseauthapiserver.entity.GooseAuthItems;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ItemsRepository extends JpaRepository<GooseAuthItems, Long> {
+public interface ItemsRepository extends JpaRepository<GooseAuthItems, Long>, ItemsRepositoryCustom {
 
   List<GooseAuthItems> findAllByUserMaster(UserMaster userMaster);
 
