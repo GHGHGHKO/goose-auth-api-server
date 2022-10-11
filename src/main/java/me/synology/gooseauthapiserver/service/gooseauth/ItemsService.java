@@ -65,9 +65,15 @@ public class ItemsService {
             .uri(gooseAuthItemsUri.getUri())
             .build()));
 
-    return new DeleteItemUrisResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
-        gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(),
-        gooseAuthItems.getFolder(), uris);
+    return DeleteItemUrisResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .notes(gooseAuthItems.getNotes())
+        .folder(gooseAuthItems.getFolder())
+        .uris(uris)
+        .build();
   }
 
   @Transactional
@@ -86,6 +92,7 @@ public class ItemsService {
             .uriIdentity(uri.getUriIdentity())
             .uri(uri.getUri())
             .build()));
+
     gooseAuthAddUriRequestDto.getUri().forEach(uri -> {
       GooseAuthItemsUri gooseAuthItemsUri = gooseAuthItemsUriRepository.save(GooseAuthItemsUri.builder()
           .gooseAuthItems(gooseAuthItems)
@@ -98,9 +105,16 @@ public class ItemsService {
           .uri(gooseAuthItemsUri.getUri())
           .build());
     });
-    return new GooseAuthAddUriResponseDto(gooseAuthItems.getItemIdentity(),
-        gooseAuthItems.getName(), gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(),
-        gooseAuthItems.getNotes(), gooseAuthItems.getFolder(), uris);
+
+    return GooseAuthAddUriResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .notes(gooseAuthItems.getNotes())
+        .folder(gooseAuthItems.getFolder())
+        .uri(uris)
+        .build();
   }
 
   @Transactional
@@ -142,9 +156,15 @@ public class ItemsService {
         }));
     itemsRepository.save(gooseAuthItems);
 
-    return new UpdateItemResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
-        gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(),
-        gooseAuthItems.getFolder(), uris);
+    return UpdateItemResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .notes(gooseAuthItems.getNotes())
+        .folder(gooseAuthItems.getFolder())
+        .uris(uris)
+        .build();
   }
 
   @Transactional
@@ -183,8 +203,11 @@ public class ItemsService {
     }
 
     return gooseAuthItemsList.stream()
-        .map(gooseAuthItems -> new GooseAuthGetItemsResponseDto(gooseAuthItems.getItemIdentity(),
-            gooseAuthItems.getName(), gooseAuthItems.getUserName()))
+        .map(gooseAuthItems -> GooseAuthGetItemsResponseDto.builder()
+            .itemIdentity(gooseAuthItems.getItemIdentity())
+            .name(gooseAuthItems.getName())
+            .userName(gooseAuthItems.getUserName())
+            .build())
         .collect(Collectors.toList());
   }
 
@@ -223,9 +246,15 @@ public class ItemsService {
               .build());
     });
 
-    return new AddItemResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
-        gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getFolder(),
-        gooseAuthItems.getNotes(), uris);
+    return AddItemResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .folder(gooseAuthItems.getFolder())
+        .notes(gooseAuthItems.getNotes())
+        .uri(uris)
+        .build();
   }
 
   private ItemsUriDto getItemsUriDto(Long itemIdentity) {
