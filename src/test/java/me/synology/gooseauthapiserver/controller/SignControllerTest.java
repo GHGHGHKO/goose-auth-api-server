@@ -54,8 +54,8 @@ class SignControllerTest {
 
   @BeforeEach
   void setUp() {
-    String userEmail = "duck-duck@gmail.com";
-    String userPassword = "HONKHONK!";
+    String userEmail = "goose-duck@gmail.com";
+    String userPassword = "Honkhonk1122!";
     String userNickname = "goose";
 
     userMasterRepository.save(
@@ -73,8 +73,8 @@ class SignControllerTest {
   void signIn() throws Exception {
     Map<String, String> params = new HashMap<>();
 
-    params.put("userEmail", "duck-duck@gmail.com");
-    params.put("userPassword", "HONKHONK!");
+    params.put("userEmail", "goose-duck@gmail.com");
+    params.put("userPassword", "Honkhonk1122!");
 
     mockMvc.perform(post("/v1/signIn")
             .content(objectMapper.writeValueAsString(params))
@@ -94,7 +94,7 @@ class SignControllerTest {
     Map<String, String> params = new HashMap<>();
 
     params.put("userEmail", "goose" + signUpTime + "@gmail.com");
-    params.put("userPassword", "HONKHONK!");
+    params.put("userPassword", "Honkhonk1233!");
     params.put("userNickname", "I-AM-NOT-DUCK");
 
     mockMvc.perform(post("/v1/signUp")

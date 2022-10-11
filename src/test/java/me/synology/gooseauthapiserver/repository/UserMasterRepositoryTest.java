@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import me.synology.gooseauthapiserver.configuration.PasswordEncoderConfiguration;
+import me.synology.gooseauthapiserver.configuration.QuerydslConfiguration;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @DataJpaTest
-@Import(PasswordEncoderConfiguration.class)
+@Import({PasswordEncoderConfiguration.class, QuerydslConfiguration.class})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class UserMasterRepositoryTest {
 
