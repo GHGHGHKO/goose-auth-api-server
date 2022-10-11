@@ -14,6 +14,7 @@ import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthGetItemsResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
+import me.synology.gooseauthapiserver.dto.gooseauth.ItemsUriDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemResponseDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UrisResponseDto;
@@ -57,14 +58,22 @@ public class ItemsService {
     List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
         gooseAuthItems);
 
-    List<UrisResponseDto> urisResponseDtoList = new ArrayList<>();
-    gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> urisResponseDtoList.add(
-        new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(),
-            gooseAuthItemsUri.getUri())));
+    List<UrisResponseDto> uris = new ArrayList<>();
+    gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> uris.add(
+        UrisResponseDto.builder()
+            .uriIdentity(gooseAuthItemsUri.getUriIdentity())
+            .uri(gooseAuthItemsUri.getUri())
+            .build()));
 
-    return new DeleteItemUrisResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
-        gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(),
-        gooseAuthItems.getFolder(), urisResponseDtoList);
+    return DeleteItemUrisResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .notes(gooseAuthItems.getNotes())
+        .folder(gooseAuthItems.getFolder())
+        .uris(uris)
+        .build();
   }
 
   @Transactional
@@ -79,7 +88,11 @@ public class ItemsService {
 
     List<UrisResponseDto> uris = new ArrayList<>();
     gooseAuthItemsUriList.forEach(
-        uri -> uris.add(new UrisResponseDto(uri.getUriIdentity(), uri.getUri())));
+        uri -> uris.add(UrisResponseDto.builder()
+            .uriIdentity(uri.getUriIdentity())
+            .uri(uri.getUri())
+            .build()));
+
     gooseAuthAddUriRequestDto.getUri().forEach(uri -> {
       GooseAuthItemsUri gooseAuthItemsUri = gooseAuthItemsUriRepository.save(GooseAuthItemsUri.builder()
           .gooseAuthItems(gooseAuthItems)
@@ -87,11 +100,21 @@ public class ItemsService {
           .createUser(apiUser)
           .updateUser(apiUser)
           .build());
-      uris.add(new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(), gooseAuthItemsUri.getUri()));
+      uris.add(UrisResponseDto.builder()
+          .uriIdentity(gooseAuthItemsUri.getUriIdentity())
+          .uri(gooseAuthItemsUri.getUri())
+          .build());
     });
-    return new GooseAuthAddUriResponseDto(gooseAuthItems.getItemIdentity(),
-        gooseAuthItems.getName(), gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(),
-        gooseAuthItems.getNotes(), gooseAuthItems.getFolder(), uris);
+
+    return GooseAuthAddUriResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .notes(gooseAuthItems.getNotes())
+        .folder(gooseAuthItems.getFolder())
+        .uri(uris)
+        .build();
   }
 
   @Transactional
@@ -123,35 +146,47 @@ public class ItemsService {
     updateItemRequestDto.getUris().forEach(uri ->
         gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> {
           if (uri.getUriIdentity().equals(gooseAuthItemsUri.getUriIdentity())) {
-            uris.add(new UrisResponseDto(uri.getUriIdentity(),
-                uri.getUri()));
+            uris.add(UrisResponseDto.builder()
+                .uriIdentity(uri.getUriIdentity())
+                .uri(uri.getUri())
+                .build());
             gooseAuthItemsUri.updateItemUri(uri.getUri());
             gooseAuthItemsUriRepository.save(gooseAuthItemsUri);
           }
         }));
     itemsRepository.save(gooseAuthItems);
 
-    return new UpdateItemResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
-        gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(),
-        gooseAuthItems.getFolder(), uris);
+    return UpdateItemResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .notes(gooseAuthItems.getNotes())
+        .folder(gooseAuthItems.getFolder())
+        .uris(uris)
+        .build();
   }
 
   @Transactional
   public GooseAuthGetItemResponseDto gooseAuthGetItem(Long itemIdentity) {
-    GooseAuthItems gooseAuthItems = itemsRepository.findByUserEmailAndItemIdentity(
-            CommonUtils.getAuthenticationUserEmail(), itemIdentity)
-        .orElseThrow(ItemNotExistException::new);
-
-    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
-        gooseAuthItems);
+    ItemsUriDto itemsUriDto = getItemsUriDto(itemIdentity);
 
     List<UrisResponseDto> uris = new ArrayList<>();
-    gooseAuthItemsUriList.forEach(
-        uri -> uris.add(new UrisResponseDto(uri.getUriIdentity(), uri.getUri())));
+    itemsUriDto.getGooseAuthItemsUriList().forEach(
+        uri -> uris.add(UrisResponseDto.builder()
+            .uriIdentity(uri.getUriIdentity())
+            .uri(uri.getUri())
+            .build()));
 
-    return new GooseAuthGetItemResponseDto(gooseAuthItems.getItemIdentity(),
-        gooseAuthItems.getName(), gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(),
-        gooseAuthItems.getNotes(), gooseAuthItems.getFolder(), uris);
+    return GooseAuthGetItemResponseDto.builder()
+        .itemIdentity(itemIdentity)
+        .name(itemsUriDto.getGooseAuthItems().getName())
+        .userName(itemsUriDto.getGooseAuthItems().getUserName())
+        .userPassword(itemsUriDto.getGooseAuthItems().getUserPassword())
+        .notes(itemsUriDto.getGooseAuthItems().getNotes())
+        .folder(itemsUriDto.getGooseAuthItems().getFolder())
+        .uris(uris)
+        .build();
   }
 
   public List<GooseAuthGetItemsResponseDto> gooseAuthGetItems(String folder) {
@@ -168,8 +203,11 @@ public class ItemsService {
     }
 
     return gooseAuthItemsList.stream()
-        .map(gooseAuthItems -> new GooseAuthGetItemsResponseDto(gooseAuthItems.getItemIdentity(),
-            gooseAuthItems.getName(), gooseAuthItems.getUserName()))
+        .map(gooseAuthItems -> GooseAuthGetItemsResponseDto.builder()
+            .itemIdentity(gooseAuthItems.getItemIdentity())
+            .name(gooseAuthItems.getName())
+            .userName(gooseAuthItems.getUserName())
+            .build())
         .collect(Collectors.toList());
   }
 
@@ -192,7 +230,7 @@ public class ItemsService {
             .build()
     );
 
-    List<UrisResponseDto> gooseAuthItemsUriList = new ArrayList<>();
+    List<UrisResponseDto> uris = new ArrayList<>();
     addItemRequestDto.getUri().forEach(uri -> {
       GooseAuthItemsUri gooseAuthItemsUri = gooseAuthItemsUriRepository.save(
           GooseAuthItemsUri.builder()
@@ -201,12 +239,36 @@ public class ItemsService {
               .createUser(apiUser)
               .updateUser(apiUser)
               .build());
-      gooseAuthItemsUriList.add(
-          new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(), gooseAuthItemsUri.getUri()));
+      uris.add(
+          UrisResponseDto.builder()
+              .uriIdentity(gooseAuthItemsUri.getUriIdentity())
+              .uri(gooseAuthItemsUri.getUri())
+              .build());
     });
 
-    return new AddItemResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
-        gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getFolder(),
-        gooseAuthItems.getNotes(), gooseAuthItemsUriList);
+    return AddItemResponseDto.builder()
+        .itemIdentity(gooseAuthItems.getItemIdentity())
+        .name(gooseAuthItems.getName())
+        .userName(gooseAuthItems.getUserName())
+        .userPassword(gooseAuthItems.getUserPassword())
+        .folder(gooseAuthItems.getFolder())
+        .notes(gooseAuthItems.getNotes())
+        .uri(uris)
+        .build();
+  }
+
+  private ItemsUriDto getItemsUriDto(Long itemIdentity) {
+    GooseAuthItems gooseAuthItems = itemsRepository.findByUserEmailAndItemIdentity(
+            CommonUtils.getAuthenticationUserEmail(), itemIdentity)
+        .orElseThrow(ItemNotExistException::new);
+
+    List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
+        gooseAuthItems);
+
+    return ItemsUriDto.builder()
+        .itemIdentity(itemIdentity)
+        .gooseAuthItems(gooseAuthItems)
+        .gooseAuthItemsUriList(gooseAuthItemsUriList)
+        .build();
   }
 }
