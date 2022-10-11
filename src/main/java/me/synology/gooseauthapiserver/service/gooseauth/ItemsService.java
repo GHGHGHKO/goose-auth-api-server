@@ -57,14 +57,14 @@ public class ItemsService {
     List<GooseAuthItemsUri> gooseAuthItemsUriList = gooseAuthItemsUriRepository.findAllByGooseAuthItems(
         gooseAuthItems);
 
-    List<UrisResponseDto> urisResponseDtoList = new ArrayList<>();
-    gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> urisResponseDtoList.add(
+    List<UrisResponseDto> uris = new ArrayList<>();
+    gooseAuthItemsUriList.forEach(gooseAuthItemsUri -> uris.add(
         new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(),
             gooseAuthItemsUri.getUri())));
 
     return new DeleteItemUrisResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
         gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getNotes(),
-        gooseAuthItems.getFolder(), urisResponseDtoList);
+        gooseAuthItems.getFolder(), uris);
   }
 
   @Transactional
@@ -192,7 +192,7 @@ public class ItemsService {
             .build()
     );
 
-    List<UrisResponseDto> gooseAuthItemsUriList = new ArrayList<>();
+    List<UrisResponseDto> uris = new ArrayList<>();
     addItemRequestDto.getUri().forEach(uri -> {
       GooseAuthItemsUri gooseAuthItemsUri = gooseAuthItemsUriRepository.save(
           GooseAuthItemsUri.builder()
@@ -201,12 +201,12 @@ public class ItemsService {
               .createUser(apiUser)
               .updateUser(apiUser)
               .build());
-      gooseAuthItemsUriList.add(
+      uris.add(
           new UrisResponseDto(gooseAuthItemsUri.getUriIdentity(), gooseAuthItemsUri.getUri()));
     });
 
     return new AddItemResponseDto(gooseAuthItems.getItemIdentity(), gooseAuthItems.getName(),
         gooseAuthItems.getUserName(), gooseAuthItems.getUserPassword(), gooseAuthItems.getFolder(),
-        gooseAuthItems.getNotes(), gooseAuthItemsUriList);
+        gooseAuthItems.getNotes(), uris);
   }
 }
