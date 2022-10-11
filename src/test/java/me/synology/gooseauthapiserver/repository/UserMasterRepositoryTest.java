@@ -46,9 +46,7 @@ class UserMasterRepositoryTest {
             .userPassword(passwordEncoder.encode(userPassword))
             .userNickname(userNickname)
             .createUser(apiUser)
-            .createDate(LocalDateTime.now())
             .updateUser(apiUser)
-            .updateDate(LocalDateTime.now())
             .roles(Collections.singletonList("ROLE_USER"))
             .build());
 
