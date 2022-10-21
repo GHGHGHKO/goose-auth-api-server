@@ -20,5 +20,5 @@ public class GooseAuthAddUriResponseDto {
 
   private String notes;
 
-  private List<UrisResponseDto> uri;
+  private List<UrisResponseDto> uris;
 }

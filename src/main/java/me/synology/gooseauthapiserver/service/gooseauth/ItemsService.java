@@ -113,7 +113,7 @@ public class ItemsService {
         .userPassword(gooseAuthItems.getUserPassword())
         .notes(gooseAuthItems.getNotes())
         .folder(gooseAuthItems.getFolder())
-        .uri(uris)
+        .uris(uris)
         .build();
   }
 
