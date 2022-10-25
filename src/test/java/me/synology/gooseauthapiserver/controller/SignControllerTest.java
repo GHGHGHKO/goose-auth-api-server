@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.transaction.Transactional;
+import me.synology.gooseauthapiserver.common.PostgresContainerTest;
 import me.synology.gooseauthapiserver.configuration.PasswordEncoderConfiguration;
 import me.synology.gooseauthapiserver.entity.UserMaster;
 import me.synology.gooseauthapiserver.repository.UserMasterRepository;
@@ -24,17 +25,17 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Transactional
 @AutoConfigureMockMvc
 @Import(PasswordEncoderConfiguration.class)
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-class SignControllerTest {
+class SignControllerTest extends PostgresContainerTest {
 
   @Autowired
   private MockMvc mockMvc;
