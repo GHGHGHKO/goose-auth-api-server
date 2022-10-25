@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import me.synology.gooseauthapiserver.advice.EmailSignInFailedExceptionCustom;
 import me.synology.gooseauthapiserver.advice.ItemNotExistException;
+import me.synology.gooseauthapiserver.common.PostgresContainerTest;
 import me.synology.gooseauthapiserver.dto.gooseauth.AddItemRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.GooseAuthAddUriRequestDto;
 import me.synology.gooseauthapiserver.dto.gooseauth.UpdateItemRequestDto;
@@ -33,20 +34,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
-@Testcontainers
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Transactional
 @AutoConfigureMockMvc
-class ItemsControllerTest {
+class ItemsControllerTest extends PostgresContainerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -69,30 +63,12 @@ class ItemsControllerTest {
   private static final String USER_EMAIL = "goose-duck@gmail.com";
   private static final String USER_PASSWORD = "Honkhonk1122!";
   private static final String USER_NICKNAME = "duck";
-  private static final String POSTGRES_INFO = "gooseauth";
 
   private String token;
   private GooseAuthItems gooseAuthItems;
 
-  @Container
-  public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
-      DockerImageName.parse("postgres:13"))
-      .withDatabaseName(POSTGRES_INFO)
-      .withUsername(POSTGRES_INFO)
-      .withPassword(POSTGRES_INFO);
-
-  @DynamicPropertySource
-  static void postgresqlProperties(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-    registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-    registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-    registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
-  }
-
   @BeforeEach
   void signAndAddItem() {
-    System.out.println("postgreSQLContainer.getJdbcUrl()");
-    System.out.println(postgreSQLContainer.getJdbcUrl());
     signService.signUp(USER_EMAIL, USER_PASSWORD, USER_NICKNAME);
     token = signService.signIn(USER_EMAIL, USER_PASSWORD);
 
