@@ -1,6 +1,6 @@
 # goose-auth-api-server
 
-## 빌드 방법
+## 빌드 방법123
 
 <details>
 <summary style="font-size: 17px">로컬 빌드 방법</summary>
