@@ -9,7 +9,7 @@ name: build-with-jib
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -54,3 +54,11 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
        arguments: jib
+  deploy:
+    needs: build-with-jib
+    runs-on: self-hosted
+    
+    steps:
+    - name: deploy container
+      run : sh ${{ secrets.DEPLOY_SCRIPT }}
+      
