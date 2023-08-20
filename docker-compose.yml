@@ -8,7 +8,7 @@ services:
     build:
       context: .
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - postgres
       - vault
@@ -25,7 +25,7 @@ services:
     image: postgres:13
     container_name: goose-auth-api-postgres
     ports:
-      - 5431:5432
+      - "5431:5432"
     environment:
       POSTGRES_USER: gooseauth
       POSTGRES_PASSWORD: gooseauth
@@ -42,7 +42,7 @@ services:
     image: redis:latest
     container_name: goose-auth-api-redis
     ports:
-      - 6379:6379
+      - "6379:6379"
     expose:
       - 6379
     healthcheck:
@@ -56,7 +56,7 @@ services:
     image: vault:latest
     container_name: goose-auth-api-vault
     ports:
-      - 8200:8200
+      - "8200:8200"
     restart: always
     volumes:
       - ./volumes/logs:/vault/logs
