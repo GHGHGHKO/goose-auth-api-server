@@ -11,7 +11,7 @@ sourceCompatibility = '11'
 
 jib {
 	from {
-		image = "adoptopenjdk/openjdk11:x86_64-alpine-jre-11.0.11_9"
+		image = "openjdk:11-ea-28-jre-slim"
 		platforms {
 			platform {
 				architecture = 'amd64'
